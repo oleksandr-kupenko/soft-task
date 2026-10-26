@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.2
+
+- Ukrainian GitHub Pages landing (`docs/index.html`).
+- Brand logo (mark + wordmark) for dashboard and site.
+
 ## 0.1.1 — 2026-10-26
 
 - **Wait contract** (`phases/5-wait.md`): one Softoria ticket = one tracked Shell; forbid `&` / `nohup` wave packs; ban «I'll check logs later»; recovery via `await-log.sh` when a wave was orphaned.

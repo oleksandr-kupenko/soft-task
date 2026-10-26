@@ -2,7 +2,11 @@
 
 **Task-first AI build framework.** You give a brief or a ticket; soft-task turns it into requirements, a plan, Softoria-HD executors, review, and blind acceptance — with a live dashboard.
 
+Ukrainian intro site: [oleksandr-kupenko.github.io/soft-task](https://oleksandr-kupenko.github.io/soft-task/)
+
 Derived from [Autopilot](https://github.com/nick-vels/skills) (MIT). See [NOTICE](NOTICE).
+
+<p align="center"><img src="docs/images/logo.png" alt="soft-task logo" width="320" /></p>
 
 ![Roles](docs/images/roles.png)
 

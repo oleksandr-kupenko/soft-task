@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>soft-task — AI-збірка за завданням</title>
+  <meta name="description" content="soft-task перетворює бриф або тікет на вимоги, план, код через Softoria-HD, рев’ю та сліпе приймання. З живим дашбордом." />
+  <meta property="og:title" content="soft-task" />
+  <meta property="og:description" content="Task-first AI build: бриф → тікети → Softoria-HD → рев’ю → приймання." />
+  <meta property="og:image" content="images/logo-mark.png" />
+  <link rel="icon" type="image/png" href="images/logo-mark.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --ink: #1A365D;
+      --ink-2: #2A4365;
+      --mut: #4A5568;
+      --line: #E2E8F0;
+      --card: #FFFFFF;
+      --bg: #F7FAFC;
+      --accent: #2B6CB0;
+      --accent-soft: #EBF4FF;
+      --ok: #276749;
+      --ok-bg: #F0FFF4;
+      --warn: #C53030;
+      --warn-bg: #FFF5F5;
+      --max: 920px;
+      --radius: 16px;
+      --shadow: 0 18px 40px -28px rgba(26, 54, 93, 0.45);
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: "IBM Plex Sans", system-ui, sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(900px 420px at 12% -10%, #dbeafe 0%, transparent 55%),
+        radial-gradient(700px 380px at 100% 8%, #e6fffa 0%, transparent 50%),
+        var(--bg);
+      line-height: 1.55;
+    }
+    a { color: var(--accent); text-underline-offset: 3px; }
+    .wrap { width: min(100% - 2rem, var(--max)); margin-inline: auto; }
+    header.site {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 1rem; padding: 1.1rem 0; flex-wrap: wrap;
+    }
+    .brand { display: flex; align-items: center; gap: .75rem; text-decoration: none; color: inherit; }
+    .brand img { width: 44px; height: 44px; border-radius: 12px; }
+    .brand strong {
+      font-family: "IBM Plex Mono", ui-monospace, monospace;
+      font-size: 1.15rem; letter-spacing: -.02em;
+    }
+    nav { display: flex; gap: .85rem; flex-wrap: wrap; font-size: .95rem; font-weight: 600; }
+    nav a { color: var(--ink-2); text-decoration: none; }
+    nav a:hover { color: var(--accent); }
+
+    .hero {
+      padding: 2.4rem 0 2rem;
+      display: grid; gap: 1.5rem;
+    }
+    .hero h1 {
+      margin: 0;
+      font-size: clamp(2rem, 4.5vw, 2.85rem);
+      line-height: 1.12;
+      letter-spacing: -.03em;
+      max-width: 16ch;
+    }
+    .hero .lead {
+      margin: 0;
+      font-size: 1.15rem;
+      color: var(--mut);
+      max-width: 48ch;
+    }
+    .cta { display: flex; gap: .75rem; flex-wrap: wrap; margin-top: .4rem; }
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      min-height: 44px; padding: 0 1.1rem; border-radius: 999px;
+      font-weight: 650; text-decoration: none; border: 1px solid transparent;
+    }
+    .btn-primary { background: var(--ink); color: #fff; }
+    .btn-primary:hover { background: var(--accent); }
+    .btn-ghost { background: var(--card); color: var(--ink); border-color: var(--line); }
+    .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+
+    section { padding: 2.4rem 0; }
+    section h2 {
+      margin: 0 0 .75rem;
+      font-size: 1.55rem;
+      letter-spacing: -.02em;
+    }
+    section .intro {
+      margin: 0 0 1.4rem;
+      color: var(--mut);
+      max-width: 58ch;
+    }
+    .panel {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 1.1rem;
+      overflow: hidden;
+    }
+    .panel img { width: 100%; height: auto; display: block; border-radius: 10px; }
+    .panel figcaption {
+      margin-top: .75rem;
+      font-size: .9rem;
+      color: var(--mut);
+    }
+    .grid-2 {
+      display: grid;
+      gap: 1rem;
+      grid-template-columns: 1fr;
+    }
+    @media (min-width: 820px) {
+      .grid-2 { grid-template-columns: 1fr 1fr; }
+      .hero { grid-template-columns: 1.15fr .85fr; align-items: center; }
+    }
+
+    .steps {
+      display: grid; gap: .7rem;
+      counter-reset: step;
+    }
+    .step {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: .85rem;
+      align-items: start;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: .9rem 1rem;
+    }
+    .step::before {
+      counter-increment: step;
+      content: counter(step);
+      width: 28px; height: 28px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-weight: 700;
+      font-size: .85rem;
+      display: grid; place-items: center;
+      margin-top: 2px;
+    }
+    .step strong { display: block; }
+    .step span { color: var(--mut); font-size: .95rem; }
+
+    .outcomes {
+      display: grid;
+      gap: .8rem;
+      grid-template-columns: 1fr;
+    }
+    @media (min-width: 700px) {
+      .outcomes { grid-template-columns: repeat(2, 1fr); }
+    }
+    .out {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 1rem 1.05rem;
+    }
+    .out b { display: block; margin-bottom: .25rem; }
+    .out p { margin: 0; color: var(--mut); font-size: .95rem; }
+
+    .gates {
+      display: flex; flex-wrap: wrap; gap: .5rem;
+      margin: 1rem 0 0;
+    }
+    .gate {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: .8rem;
+      font-weight: 600;
+      padding: .35rem .65rem;
+      border-radius: 8px;
+      background: var(--warn-bg);
+      color: var(--warn);
+      border: 1px solid #FEB2B2;
+    }
+
+    .install {
+      background: #0F172A;
+      color: #E2E8F0;
+      border-radius: 18px;
+      padding: 1.25rem 1.3rem;
+      box-shadow: var(--shadow);
+    }
+    .install h2 { color: #fff; }
+    .install .intro { color: #A0AEC0; }
+    .install pre {
+      margin: 0;
+      overflow-x: auto;
+      background: #020617;
+      border-radius: 12px;
+      padding: 1rem 1.1rem;
+      font-family: "IBM Plex Mono", ui-monospace, monospace;
+      font-size: .86rem;
+      line-height: 1.5;
+      color: #E2E8F0;
+    }
+    .install code { font-family: inherit; }
+
+    .faq details {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: .85rem 1rem;
+      margin-bottom: .55rem;
+    }
+    .faq summary {
+      cursor: pointer;
+      font-weight: 650;
+      list-style: none;
+    }
+    .faq summary::-webkit-details-marker { display: none; }
+    .faq summary::after {
+      content: "+";
+      float: right;
+      color: var(--mut);
+      font-weight: 500;
+    }
+    .faq details[open] summary::after { content: "−"; }
+    .faq details p {
+      margin: .65rem 0 0;
+      color: var(--mut);
+      font-size: .95rem;
+    }
+    .faq code {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: .86em;
+      background: var(--accent-soft);
+      color: var(--ink);
+      padding: .1em .35em;
+      border-radius: 4px;
+    }
+
+    footer.site {
+      padding: 2rem 0 2.8rem;
+      color: var(--mut);
+      font-size: .9rem;
+      border-top: 1px solid var(--line);
+      margin-top: 1rem;
+      display: flex; flex-wrap: wrap; gap: .75rem 1.25rem;
+      justify-content: space-between;
+    }
+    footer.site a { color: var(--ink-2); font-weight: 600; text-decoration: none; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="site">
+      <a class="brand" href="./">
+        <img src="images/logo-mark.png" width="44" height="44" alt="" />
+        <strong>soft-task</strong>
+      </a>
+      <nav aria-label="Розділи">
+        <a href="#how">Як працює</a>
+        <a href="#out">Що на виході</a>
+        <a href="#install">Встановити</a>
+        <a href="#faq">FAQ</a>
+        <a href="https://github.com/oleksandr-kupenko/soft-task">GitHub</a>
+      </nav>
+    </header>
+
+    <section class="hero" aria-label="Вступ">
+      <div>
+        <h1>Даєте задачу — отримуєте робочий код</h1>
+        <p class="lead">
+          soft-task — фреймворк для AI-збірки «від брифу до приймання».
+          Оркестратор веде політ, Softoria-HD пише код по тікетах,
+          а гейти перевіряють результат вашими словами.
+        </p>
+        <div class="cta">
+          <a class="btn btn-primary" href="#install">Швидкий старт</a>
+          <a class="btn btn-ghost" href="#how">Як це влаштовано</a>
+        </div>
+      </div>
+      <figure class="panel">
+        <img src="images/logo.png" alt="Логотип soft-task: картка завдання з галочкою" />
+        <figcaption>Знак soft-task: задача → чекліст → зроблено.</figcaption>
+      </figure>
+    </section>
+
+    <section id="how">
+      <h2>Як це працює</h2>
+      <p class="intro">
+        Ви викликаєте <code>/soft-task</code> у Cursor, OpenCode, Claude Code або Codex.
+        Агент у цій сесії стає <b>оркестратором</b>: планує, запускає виконавців, не пише код додатку сам.
+      </p>
+
+      <div class="grid-2" style="margin-bottom:1rem">
+        <figure class="panel">
+          <img src="images/roles.png" alt="Схема ролей: User, Orchestrator, Executor, Reviewer, Vision" />
+          <figcaption>Ролі. Оркестратор диспетчеризує; код пише виконавець.</figcaption>
+        </figure>
+        <figure class="panel">
+          <img src="images/flow.png" alt="Схема етапів польоту soft-task від Setup до Acceptance" />
+          <figcaption>Політ: від підготовки до сліпого приймання. G1–G4 — гейти.</figcaption>
+        </figure>
+      </div>
+
+      <div class="steps">
+        <div class="step">
+          <div>
+            <strong>Підготовка</strong>
+            <span>Визначає середовище, пише конфіг, піднімає живий дашборд на localhost.</span>
+          </div>
+        </div>
+        <div class="step">
+          <div>
+            <strong>Вимоги</strong>
+            <span>Ваш бриф стає пронумерованим маніфестом. Нічого не зникає «по дорозі».</span>
+          </div>
+        </div>
+        <div class="step">
+          <div>
+            <strong>Спека і план</strong>
+            <span>Опис рішення, інтерфейси, тікети з зонами і хвилями.</span>
+          </div>
+        </div>
+        <div class="step">
+          <div>
+            <strong>Збірка</strong>
+            <span>Кожен тікет — свіжий процес Softoria-HD. До трьох паралельно, зони не перетинаються.</span>
+          </div>
+        </div>
+        <div class="step">
+          <div>
+            <strong>Рев’ю і приймання</strong>
+            <span>Точкове й гілкове рев’ю, потім сліпа перевірка лише за брифом (без спеки).</span>
+          </div>
+        </div>
+      </div>
+      <div class="gates" aria-label="Гейти">
+        <span class="gate">G1 вимоги</span>
+        <span class="gate">G2 спека</span>
+        <span class="gate">G3 план</span>
+        <span class="gate">G4 приймання</span>
+      </div>
+    </section>
+
+    <section id="out">
+      <h2>Що ви отримуєте</h2>
+      <p class="intro">Не чат із «ось можливий код», а артефакти в репозиторії й докази, що задача закрита.</p>
+      <div class="outcomes">
+        <div class="out">
+          <b>Код по тікетах</b>
+          <p>Окремий коміт на тікет, зони файлів зафіксовані. Оркестратор не змішує контексти.</p>
+        </div>
+        <div class="out">
+          <b>Рев’ю</b>
+          <p>За замовчуванням Softoria-HD. Можна перемкнути на субагента вашого середовища.</p>
+        </div>
+        <div class="out">
+          <b>Тести</b>
+          <p>У тікеті — scoped-команди. Оркестратор проганяє їх перед комітом. Stack detector підкаже dotnet / Pest / npm / pytest / go.</p>
+        </div>
+        <div class="out">
+          <b>Живий дашборд</b>
+          <p>Етапи, гейти, стрічка подій на <code>http://127.0.0.1:&lt;port&gt;/dashboard.html</code> (EN / UK / RU).</p>
+        </div>
+        <div class="out">
+          <b>Маніфест і спека</b>
+          <p>Файли в <code>.soft-task/</code>: бриф, вимоги, notes, interfaces, тікети — можна читати й аудитити.</p>
+        </div>
+        <div class="out">
+          <b>Візуальна QA</b>
+          <p>Для UI: Softoria-SD пише текстову спеку з макетів і перевіряє скріни після збірки.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="install">
+      <div class="install">
+        <h2>Встановити</h2>
+        <p class="intro">Потрібні Node 18+, OpenCode (для Softoria), ключ <code>SOFTORIA_API_KEY</code> і корпоративний VPN.</p>
+        <pre><code>npx github:oleksandr-kupenko/soft-task install --harness all --yes
+export SOFTORIA_API_KEY="…"
+# у агенті:
+/soft-task task Виправ пагінацію інвойсів — критерії в тікеті нижче</code></pre>
+      </div>
+    </section>
+
+    <section id="faq" class="faq">
+      <h2>FAQ</h2>
+      <p class="intro">Коротко. Деталі — у README на GitHub.</p>
+
+      <details>
+        <summary>Хто такий оркестратор?</summary>
+        <p>Модель і середовище, де ви викликали <code>/soft-task</code>. Він читає фази, крутить <code>st.py</code>, запускає виконавців. Код додатку сам не пише.</p>
+      </details>
+      <details>
+        <summary>Дашборд і маленький сервер з’являються самі?</summary>
+        <p>Так. У preflight оркестратор робить <code>st.py init</code>: піднімає <code>python -m http.server</code> і відкриває <code>dashboard.html</code>.</p>
+      </details>
+      <details>
+        <summary>Як змінити виконавців?</summary>
+        <p>У <code>.soft-task/config.json</code>: <code>engines.executor</code> (зараз <code>softoria-hd</code>), <code>engines.reviewer</code> — <code>softoria-hd</code> або <code>harness</code>, <code>engines.vision</code> — <code>softoria-sd</code>. Можна сказати це в чаті на старті — оркестратор запише оверрайд.</p>
+      </details>
+      <details>
+        <summary>Можна зробити виконавцем модель з Codex / Cursor?</summary>
+        <p>Рев’юер — так, через <code>engines.reviewer: "harness"</code> (субагент середовища). Окремого двигуна «executor = Codex» поки немає: тікети йдуть у Softoria через <code>run.sh</code>.</p>
+      </details>
+      <details>
+        <summary>Як саме стартує Softoria-HD?</summary>
+        <p>Через CLI OpenCode: <code>engines/softoria-hd/run.sh</code> → <code>opencode run --auto --standalone --model softoria/Softoria-HD#max</code>. Один тікет = один процес.</p>
+      </details>
+      <details>
+        <summary>Навіщо VPN?</summary>
+        <p>API Softoria за корпоративним VPN. Без нього запуск зависає або дає 5xx — спочатку увімкніть VPN.</p>
+      </details>
+      <details>
+        <summary>Що з секретами?</summary>
+        <p>Ключі в репозиторій не кладуться. soft-task просить лише ім’я змінної; значення — у вашому середовищі. Бриф перед записом ред’юситься.</p>
+      </details>
+    </section>
+
+    <footer class="site">
+      <span>MIT · похідне від Autopilot · див. NOTICE</span>
+      <span>
+        <a href="https://github.com/oleksandr-kupenko/soft-task">Репозиторій</a>
+        ·
+        <a href="https://github.com/oleksandr-kupenko/soft-task/blob/main/README.md">README (EN)</a>
+      </span>
+    </footer>
+  </div>
+</body>
+</html>
