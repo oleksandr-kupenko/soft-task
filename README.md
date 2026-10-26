@@ -8,6 +8,8 @@ Derived from [Autopilot](https://github.com/nick-vels/skills) (MIT). See [NOTICE
 
 <p align="center"><img src="docs/images/logo.png" alt="soft-task logo" width="320" /></p>
 
+![Dashboard](docs/images/dashboard.png)
+
 ![Roles](docs/images/roles.png)
 
 ![Flow](docs/images/flow.png)

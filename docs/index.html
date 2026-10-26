@@ -49,7 +49,7 @@
       border-bottom: 1px solid var(--line-soft);
       font-size: 13px; color: var(--mut);
     }
-    .top img { width: 22px; height: 22px; border-radius: 4px; }
+    .top img { width: 22px; height: 22px; }
     .top a { margin-left: auto; }
 
     h1 {
@@ -87,7 +87,7 @@
       font-weight: 700; font-size: 15px; text-align: center; padding: 8px 6px 4px;
     }
     .infobox .ib-img { text-align: center; padding: 6px 0 10px; }
-    .infobox .ib-img img { width: 96px; height: 96px; border-radius: 16px; }
+    .infobox .ib-img img { width: 100%; max-width: 220px; height: auto; }
     .infobox table { width: 100%; border-collapse: collapse; }
     .infobox th, .infobox td { padding: 4px 8px; vertical-align: top; border-top: 1px solid var(--line-soft); text-align: left; }
     .infobox th { width: 42%; font-weight: 600; }
@@ -164,7 +164,7 @@
 
     <div class="infobox">
       <div class="ib-title">soft-task</div>
-      <div class="ib-img"><img src="images/logo-mark.png" alt="Логотип soft-task" /></div>
+      <div class="ib-img"><img src="images/logo.png" alt="Логотип soft-task" /></div>
       <table>
         <tr><th>Тип</th><td>Skill для AI-агента + CLI</td></tr>
         <tr><th>Середовища</th><td>Cursor, Claude Code, OpenCode, Codex</td></tr>
@@ -311,11 +311,15 @@ npx github:oleksandr-kupenko/soft-task doctor</code></pre>
 /soft-task interview deep docs/brief.md
 /soft-task full strict docs/brief.md</code></pre>
 
-    <h3 id="dashboard">Кольори дашборда</h3>
+    <h3 id="dashboard">Дашборд</h3>
+    <figure class="thumb">
+      <img src="images/dashboard.png" alt="Дашборд soft-task: етапи, тікети з іменем агента, перевірки G1–G4, стрічка подій" />
+      <figcaption>Дашборд під час прогону. Біля кожного тікета видно агента або модель, яка його виконує.</figcaption>
+    </figure>
     <table class="wiki">
       <tr><th>Колір</th><th>Значення</th></tr>
-      <tr><td>Синій</td><td>soft-task працює сам.</td></tr>
-      <tr><td>Помаранчевий</td><td>soft-task чекає вашої відповіді.</td></tr>
+      <tr><td>Світлий блок зверху</td><td>soft-task працює сам.</td></tr>
+      <tr><td>Бірюзовий блок</td><td>soft-task чекає вашої відповіді.</td></tr>
       <tr><td>Зелений</td><td>Прогін завершено успішно.</td></tr>
       <tr><td>Червоний</td><td>Прогін зупинено з помилкою.</td></tr>
     </table>

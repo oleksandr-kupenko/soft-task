@@ -63,6 +63,8 @@ Every ticket of the chain carries the same requirement. It applies when the chan
 - `сильная` — every ticket with review `да`, and any ticket whose core is a genuinely hard algorithm or an unfamiliar integration.
 - `обычная` — the rest: a well-specified slice over decided boundaries. It runs on a cheaper model (`phases/5-subagents.md`).
 
+**Agent** — who actually runs the ticket, shown next to it on the dashboard (which is static HTML fed by `state.js`, so it has to be known here). One header line per ticket: `**Агент:** <name>` *(or `**Agent:**`)*. With the default engine write `Softoria-HD (max)`; when the executor is `harness`, name the concrete model the Task will use for this ticket's `Модель` (e.g. `Claude Sonnet 4.5` for `обычная`, a stronger one for `сильная`). If the line is missing, `st.py` fills it from `config.json`. If the real executor differs at launch time (fallback, model unavailable), say so: `st.py ticket NN start --agent "<name>"`; the reviewer is `st.py ticket NN review --agent "<name>"` (defaults to `engines.reviewer`).
+
 ## The ticket file
 
 `.soft-task/<dir>/tickets/NN-<slug>.md`. The header lines are read by `st.py` — keep their names:
@@ -76,6 +78,7 @@ Every ticket of the chain carries the same requirement. It applies when the chan
 **Волна:** 2
 **Ревью:** нет
 **Модель:** обычная
+**Агент:** Softoria-HD (max)
 
 ## Что должно заработать
 

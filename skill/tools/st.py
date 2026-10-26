@@ -15,6 +15,8 @@
     python3 .soft-task/st.py ticket 02 repair --note "пустой адрес проходит — R01.1"
     python3 .soft-task/st.py ticket 02 done --tests 34/0 --commit a1b2c3d
     python3 .soft-task/st.py ticket 03 retry | fail --note "…" | reset
+    python3 .soft-task/st.py ticket 02 start --agent "Claude Sonnet 4.5"   # who actually runs it
+    python3 .soft-task/st.py ticket 02 review --agent "Softoria-HD (max)"  # who reviews it
     python3 .soft-task/st.py stage build done | fail --note "…"
     python3 .soft-task/st.py add concerns "src/notify.ts:40 — два формата даты"
     python3 .soft-task/st.py add debt.emptyEnv TELEGRAM_BOT_TOKEN
@@ -308,7 +310,39 @@ def parse_ticket(path):
         "zone": re.findall(r"`([^`]+)`", get("зона", "zone")),
         "review": get("ревью", "review") or None,
         "model": get("модель", "model") or None,
+        # Who builds it — written into the ticket at plan time, shown on the dashboard.
+        "agent": get("агент", "agent", "исполнитель", "executor") or None,
     }
+
+
+def engine_label(engine, cfg):
+    """Human label for an engine key from config.json; None when the key says «harness»
+    (the session picks the model, so the ticket itself must name it)."""
+    if not engine or engine == "harness":
+        return None
+    if engine == "softoria-sd":
+        return "Softoria-SD"
+    if engine.startswith("softoria"):
+        m = (cfg.get("softoria") or {}).get("model") or "Softoria-HD"
+        name, _, eff = m.split("/")[-1].partition("#")
+        return "%s (%s)" % (name, eff) if eff else name
+    return engine
+
+
+def agents_from_config():
+    """Default agent per role, read from .soft-task/config.json."""
+    try:
+        with open(os.path.join(A, "config.json"), encoding="utf-8") as f:
+            cfg = json.load(f)
+    except (OSError, ValueError):
+        cfg = {}
+    eng = cfg.get("engines") or {}
+    out = {}
+    for role in ("executor", "reviewer", "acceptance", "helper", "vision"):
+        label = engine_label(eng.get(role), cfg)
+        if label:
+            out[role] = label
+    return out
 
 
 def publish_tickets(state):
@@ -317,13 +351,20 @@ def publish_tickets(state):
         return "в %s/tickets/ нет файлов" % state.get("dir")
     old = {t["id"]: t for t in state.get("tickets") or []}
     out = []
+    agents = agents_from_config()
+    state["agents"] = agents
     for p in files:
         t = parse_ticket(p)
         prev = old.get(t["id"], {})
         for k in ("status", "startedAt", "finishedAt", "retries", "repairs", "repairFindings",
-                  "tests", "commit", "concerns"):
+                  "tests", "commit", "concerns", "reviewer"):
             if k in prev:
                 t[k] = prev[k]
+        # A runtime override (`ticket NN start --agent …`) beats the plan; the plan beats config.
+        if prev.get("agentOverride"):
+            t["agent"] = t["agentOverride"] = prev["agentOverride"]
+        elif not t.get("agent"):
+            t["agent"] = agents.get("executor")
         t.setdefault("status", "pending")
         t.setdefault("retries", 0)
         t.setdefault("repairs", 0)
@@ -809,6 +850,14 @@ def cmd_ticket(state, pos, opt):
         if tk is None:
             die("таска %s нет — сначала `st.py tickets`" % i)
         tk["status"] = TICKET_STATUSES[act]
+        who = opt.get("agent") if isinstance(opt.get("agent"), str) else None
+        if who:
+            if act == "review":
+                tk["reviewer"] = who
+            else:
+                tk["agent"] = tk["agentOverride"] = who
+        elif act == "review" and not tk.get("reviewer"):
+            tk["reviewer"] = (state.get("agents") or {}).get("reviewer") or tk.get("agent")
         if act == "start":
             tk.setdefault("startedAt", t)
             tk.pop("finishedAt", None)

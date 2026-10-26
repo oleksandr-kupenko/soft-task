@@ -20,7 +20,7 @@ Read `.soft-task/config.json`. Defaults:
 
 Softoria-HD is **text only**. It never gets a task whose acceptance needs looking at an image. Visual work is split: vision writes a text spec → Softoria builds → vision checks screenshots.
 
-The ticket field `Модель` / `Model` is ignored when the executor is Softoria-HD.
+The ticket field `Модель` / `Model` is ignored when the executor is Softoria-HD. The `Агент` / `Agent` field is not: it is what the dashboard shows. When the actual executor differs from it, launch with `st.py ticket NN start --agent "<name>"`.
 
 ### Preflight once per run (build stage)
 
