@@ -7,6 +7,7 @@
 - New `engines/softoria-hd/probe.sh`: one 1-token request that tells `vpn` (no connection) from `gateway` (5xx/429/hang) and `auth`.
 - New `engines/softoria-hd/wait-softoria.sh`: a tracked waiter. Its exit wakes the orchestrator, which resumes paused tickets by session (`phases/5-subagents.md` «Gateway down»).
 - `doctor` uses the probe; a missing `SOFTORIA_API_KEY` env is a warning when `opencode.json` holds the key.
+- New blue–yellow logo (check mark made of tickets) for the dashboard, the site and the README; the dashboard sets it as the tab favicon. Hand-drawn SVG logos removed; master raster: `docs/images/logo-mark-1024.png`.
 
 ## 0.1.3
 
