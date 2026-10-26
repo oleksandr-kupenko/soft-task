@@ -3,242 +3,395 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>soft-task</title>
-  <meta name="description" content="Документація soft-task: оркестратор, Softoria-HD виконавці, етапи, гейти, конфіг." />
+  <title>soft-task — документація</title>
+  <meta name="description" content="soft-task — фреймворк для AI-розробки. Він ділить велику задачу на тікети. Кожен тікет виконує окремий агент Softoria-HD." />
   <link rel="icon" type="image/png" href="images/logo-mark.png" />
   <style>
     :root {
-      --fg: #24292f;
-      --mut: #57606a;
-      --line: #d0d7de;
+      --fg: #202122;
+      --mut: #54595d;
+      --line: #a2a9b1;
+      --line-soft: #c8ccd1;
       --bg: #ffffff;
-      --soft: #f6f8fa;
-      --link: #0969da;
-      --code-bg: #eff1f3;
-      --max: 860px;
+      --box: #f8f9fa;
+      --link: #3366cc;
+      --code: #eaecf0;
     }
     * { box-sizing: border-box; }
     body {
       margin: 0;
-      font: 16px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
-      color: var(--fg);
       background: var(--bg);
+      color: var(--fg);
+      font: 15px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     }
-    a { color: var(--link); }
-    code, pre {
-      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-      font-size: 0.875em;
-    }
+    a { color: var(--link); text-decoration: none; }
+    a:hover { text-decoration: underline; }
     code {
-      background: var(--code-bg);
-      padding: 0.1em 0.35em;
-      border-radius: 4px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.88em;
+      background: var(--code);
+      padding: 1px 4px;
+      border-radius: 2px;
     }
     pre {
-      background: var(--soft);
-      border: 1px solid var(--line);
-      border-radius: 6px;
-      padding: 12px 14px;
+      background: var(--box);
+      border: 1px solid var(--line-soft);
+      padding: 10px 12px;
       overflow-x: auto;
       line-height: 1.45;
-      margin: 0;
     }
     pre code { background: none; padding: 0; font-size: 13px; }
-    .wrap { width: min(100% - 2rem, var(--max)); margin: 0 auto; padding: 1.25rem 0 3rem; }
-    header {
-      display: flex; align-items: center; justify-content: space-between;
-      gap: 1rem; flex-wrap: wrap;
-      padding-bottom: 1rem;
-      border-bottom: 1px solid var(--line);
-      margin-bottom: 1.5rem;
-    }
-    .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: inherit; font-weight: 600; }
-    .brand img { width: 28px; height: 28px; border-radius: 6px; }
-    nav { display: flex; gap: 0.9rem; flex-wrap: wrap; font-size: 14px; }
-    nav a { text-decoration: none; color: var(--mut); }
-    nav a:hover { color: var(--link); }
-    h1 { font-size: 1.75rem; margin: 0 0 0.5rem; font-weight: 600; }
-    h2 { font-size: 1.25rem; margin: 2rem 0 0.6rem; font-weight: 600; padding-top: 0.5rem; border-top: 1px solid var(--line); }
-    h2:first-of-type { border-top: 0; padding-top: 0; }
-    p, li { color: var(--fg); }
-    .mut { color: var(--mut); }
-    ul { padding-left: 1.25rem; }
-    li { margin: 0.35rem 0; }
-    table { width: 100%; border-collapse: collapse; font-size: 14px; margin: 0.75rem 0 1rem; }
-    th, td { border: 1px solid var(--line); padding: 8px 10px; text-align: left; vertical-align: top; }
-    th { background: var(--soft); font-weight: 600; }
-    figure { margin: 1rem 0; }
-    figure img {
-      max-width: 100%; height: auto; display: block;
-      border: 1px solid var(--line); border-radius: 6px; background: var(--soft);
-    }
-    figcaption { font-size: 13px; color: var(--mut); margin-top: 0.4rem; }
-    .grid { display: grid; gap: 1rem; }
-    @media (min-width: 720px) { .grid-2 { grid-template-columns: 1fr 1fr; } }
-    details {
-      border: 1px solid var(--line);
-      border-radius: 6px;
-      padding: 0.55rem 0.85rem;
-      margin: 0.45rem 0;
-      background: var(--soft);
-    }
-    summary { cursor: pointer; font-weight: 600; font-size: 14px; }
-    details p { margin: 0.5rem 0 0.15rem; font-size: 14px; color: var(--mut); }
-    footer {
-      margin-top: 2.5rem; padding-top: 1rem;
-      border-top: 1px solid var(--line);
+
+    .page { max-width: 1000px; margin: 0 auto; padding: 18px 20px 48px; }
+    .top {
+      display: flex; align-items: center; gap: 10px;
+      padding-bottom: 8px; margin-bottom: 18px;
+      border-bottom: 1px solid var(--line-soft);
       font-size: 13px; color: var(--mut);
-      display: flex; flex-wrap: wrap; gap: 0.5rem 1rem; justify-content: space-between;
     }
-    footer a { color: var(--mut); }
+    .top img { width: 22px; height: 22px; border-radius: 4px; }
+    .top a { margin-left: auto; }
+
+    h1 {
+      font-family: "Linux Libertine", Georgia, Times, serif;
+      font-weight: 400;
+      font-size: 1.9rem;
+      margin: 0 0 4px;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 4px;
+    }
+    .sub { font-size: 13px; color: var(--mut); margin: 0 0 14px; }
+    h2 {
+      font-family: "Linux Libertine", Georgia, Times, serif;
+      font-weight: 400;
+      font-size: 1.45rem;
+      margin: 28px 0 8px;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 3px;
+    }
+    h3 { font-size: 1.02rem; margin: 18px 0 6px; }
+    p { margin: 8px 0; }
+    ul, ol { padding-left: 1.4rem; margin: 6px 0; }
+    li { margin: 3px 0; }
+
+    .infobox {
+      float: right;
+      width: 290px;
+      margin: 0 0 12px 18px;
+      border: 1px solid var(--line);
+      background: var(--box);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+    .infobox caption, .infobox .ib-title {
+      font-weight: 700; font-size: 15px; text-align: center; padding: 8px 6px 4px;
+    }
+    .infobox .ib-img { text-align: center; padding: 6px 0 10px; }
+    .infobox .ib-img img { width: 96px; height: 96px; border-radius: 16px; }
+    .infobox table { width: 100%; border-collapse: collapse; }
+    .infobox th, .infobox td { padding: 4px 8px; vertical-align: top; border-top: 1px solid var(--line-soft); text-align: left; }
+    .infobox th { width: 42%; font-weight: 600; }
+
+    .toc {
+      display: inline-block;
+      border: 1px solid var(--line);
+      background: var(--box);
+      padding: 8px 14px 8px 10px;
+      font-size: 13px;
+      margin: 10px 0 4px;
+    }
+    .toc b { display: block; text-align: center; margin-bottom: 4px; }
+    .toc ol { margin: 0; padding-left: 1.3rem; }
+
+    table.wiki {
+      border-collapse: collapse;
+      margin: 10px 0 14px;
+      font-size: 14px;
+      background: var(--box);
+    }
+    table.wiki th, table.wiki td {
+      border: 1px solid var(--line);
+      padding: 5px 9px;
+      text-align: left;
+      vertical-align: top;
+    }
+    table.wiki th { background: #eaecf0; }
+
+    figure.thumb {
+      margin: 10px 0 14px;
+      border: 1px solid var(--line-soft);
+      background: var(--box);
+      padding: 4px;
+    }
+    figure.thumb img { display: block; max-width: 100%; height: auto; }
+    figure.thumb figcaption { font-size: 13px; color: var(--mut); padding: 5px 3px 2px; }
+
+    .note {
+      border-left: 3px solid var(--link);
+      background: var(--box);
+      padding: 6px 12px;
+      margin: 10px 0;
+      font-size: 14px;
+    }
+    .clear { clear: both; }
+    footer {
+      clear: both;
+      margin-top: 36px;
+      padding-top: 10px;
+      border-top: 1px solid var(--line-soft);
+      font-size: 12.5px;
+      color: var(--mut);
+    }
+    @media (max-width: 760px) {
+      .infobox { float: none; width: 100%; margin: 0 0 14px; }
+    }
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <header>
-      <a class="brand" href="./">
-        <img src="images/logo-mark.png" width="28" height="28" alt="" />
-        soft-task
-      </a>
-      <nav>
-        <a href="#overview">Огляд</a>
-        <a href="#flow">Етапи</a>
-        <a href="#output">Результат</a>
-        <a href="#install">Встановлення</a>
-        <a href="#faq">FAQ</a>
-        <a href="https://github.com/oleksandr-kupenko/soft-task">GitHub</a>
-      </nav>
-    </header>
-
-    <h1>soft-task</h1>
-    <p class="mut">
-      Skill / CLI для AI-збірки в існуючому репо: бриф або тікет → маніфест вимог → план →
-      виконавці Softoria-HD → рев’ю → перевірка за брифом. Оркестратор — агент сесії
-      (Cursor / OpenCode / Claude Code / Codex).
-    </p>
-
-    <h2 id="overview">Огляд ролей</h2>
-    <table>
-      <thead>
-        <tr><th>Роль</th><th>Хто</th><th>Що робить</th></tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Orchestrator</td>
-          <td>Сесія, де викликали <code>/soft-task</code></td>
-          <td>Читає фази, <code>st.py</code>, запускає виконавців. Код додатку не пише.</td>
-        </tr>
-        <tr>
-          <td>Executor</td>
-          <td>Softoria-HD (default)</td>
-          <td>Один тікет = один процес <code>opencode run --standalone</code>.</td>
-        </tr>
-        <tr>
-          <td>Reviewer</td>
-          <td>Softoria-HD або <code>harness</code></td>
-          <td>Точкове / гілкове рев’ю. <code>harness</code> = субагент середовища.</td>
-        </tr>
-        <tr>
-          <td>Vision</td>
-          <td>Softoria-SD</td>
-          <td>Текстова спека з макетів і перевірка скрінів (<code>see.sh</code>).</td>
-        </tr>
-      </tbody>
-    </table>
-
-    <div class="grid grid-2">
-      <figure>
-        <img src="images/roles.png" alt="Ролі: User, Orchestrator, Executor, Reviewer, Vision" />
-        <figcaption>roles.png</figcaption>
-      </figure>
-      <figure>
-        <img src="images/flow.png" alt="Етапи: Setup … Acceptance, гейти G1–G4" />
-        <figcaption>flow.png — етапи і гейти G1–G4</figcaption>
-      </figure>
+  <div class="page">
+    <div class="top">
+      <img src="images/logo-mark.png" alt="" />
+      <span>soft-task · документація</span>
+      <a href="https://github.com/oleksandr-kupenko/soft-task">GitHub</a>
     </div>
 
-    <h2 id="flow">Етапи</h2>
-    <ol>
-      <li><b>preflight</b> — harness, <code>.soft-task/config.json</code>, дашборд (<code>python -m http.server</code>).</li>
-      <li><b>manifest</b> — бриф → пронумеровані вимоги (секрети ред’юсяться).</li>
-      <li><b>briefing</b> — закрити відкриті розвилки (залежить від mode).</li>
-      <li><b>spec</b> — <code>spec.md</code>, <code>interfaces.md</code>, <code>notes.md</code>.</li>
-      <li><b>plan</b> — тікети з зонами/хвилями; G3 = <code>st.py check-plan</code>.</li>
-      <li><b>build</b> — Softoria-HD; до 3 паралельно; зони без перетину.</li>
-      <li><b>review</b> — рев’ю змін.</li>
-      <li><b>final</b> — G4: перевірка лише за брифом (без спеки); smoke / скріни за потреби.</li>
-    </ol>
-    <p class="mut">Режими: <code>full</code> · <code>semi</code> (default) · <code>interview</code> · <code>manual</code>. Depth: <code>strict</code> · <code>normal</code> · <code>deep</code> · <code>task</code>.</p>
+    <h1>soft-task</h1>
+    <p class="sub">Фреймворк для AI-розробки великих задач</p>
 
-    <h2 id="output">Що з’являється в репо</h2>
-    <ul>
-      <li>Код по тікетах + окремий коміт на тікет (після scoped-тестів).</li>
-      <li>Артефакти в <code>.soft-task/</code>: бриф, manifest, spec, interfaces, tickets, state.</li>
-      <li>Рев’ю (Softoria-HD або harness-субагент).</li>
-      <li>Тести: команди з тікета; stack detector — dotnet / Pest / npm / pytest / go.</li>
-      <li>Дашборд: <code>http://127.0.0.1:&lt;port&gt;/dashboard.html</code> (EN / UK / RU).</li>
-    </ul>
+    <div class="infobox">
+      <div class="ib-title">soft-task</div>
+      <div class="ib-img"><img src="images/logo-mark.png" alt="Логотип soft-task" /></div>
+      <table>
+        <tr><th>Тип</th><td>Skill для AI-агента + CLI</td></tr>
+        <tr><th>Середовища</th><td>Cursor, Claude Code, OpenCode, Codex</td></tr>
+        <tr><th>Виконавець</th><td>Softoria-HD</td></tr>
+        <tr><th>Зір (vision)</th><td>Softoria-SD</td></tr>
+        <tr><th>Вимоги</th><td>Node 18+, OpenCode, Python 3, VPN</td></tr>
+        <tr><th>Основа</th><td>Autopilot (nick-vels)</td></tr>
+        <tr><th>Ліцензія</th><td>MIT</td></tr>
+        <tr><th>Код</th><td><a href="https://github.com/oleksandr-kupenko/soft-task">GitHub</a></td></tr>
+      </table>
+    </div>
+
+    <p>
+      <b>soft-task</b> — це фреймворк для розробки з AI-агентом. Ви даєте задачу текстом або файлом.
+      soft-task ділить задачу на малі частини — <b>тікети</b>. Кожен тікет виконує окремий агент
+      Softoria-HD у новому, чистому контексті.
+    </p>
+    <p>
+      Головний агент — <b>оркестратор</b> — керує процесом. Це агент у вашому середовищі (Cursor, Claude Code,
+      OpenCode або Codex). Оркестратор не пише код проєкту. Він планує, запускає виконавців і перевіряє результат.
+    </p>
+    <p>
+      Наприкінці soft-task порівнює результат з вашим початковим текстом задачі. Так жодна вимога не губиться.
+    </p>
+
+    <div class="toc">
+      <b>Зміст</b>
+      <ol>
+        <li><a href="#problem">Навіщо це потрібно</a></li>
+        <li><a href="#how">Як це працює</a></li>
+        <li><a href="#install">Встановлення</a></li>
+        <li><a href="#usage">Порядок використання</a></li>
+        <li><a href="#flags">Режими і глибина</a></li>
+        <li><a href="#result">Результат</a></li>
+        <li><a href="#config">Налаштування виконавців</a></li>
+        <li><a href="#faq">Часті питання</a></li>
+      </ol>
+    </div>
+
+    <h2 id="problem">Навіщо це потрібно</h2>
+    <p>
+      Малу задачу агент робить в одному чаті. Велика задача в один контекст не поміщається.
+      Агент забуває частину вимог і робить помилки. Далі більшість часу йде на виправлення.
+    </p>
+    <p>soft-task вирішує це так:</p>
+    <ol>
+      <li>Записує кожну вимогу з вашого тексту під номером.</li>
+      <li>Ділить роботу на тікети. Кожен тікет поміщається в один контекст.</li>
+      <li>Запускає кожен тікет в окремому процесі виконавця.</li>
+      <li>Перевіряє результат за вашими вимогами на кожному етапі.</li>
+    </ol>
+
+    <h2 id="how">Як це працює</h2>
+
+    <h3>Ролі</h3>
+    <table class="wiki">
+      <tr><th>Роль</th><th>Хто виконує</th><th>Що робить</th></tr>
+      <tr><td>Оркестратор</td><td>Агент у сесії, де ви викликали <code>/soft-task</code></td><td>Планує, запускає виконавців, комітить, перевіряє. Код проєкту не пише.</td></tr>
+      <tr><td>Виконавець</td><td>Softoria-HD</td><td>Пише код одного тікета. Кожен тікет — новий процес.</td></tr>
+      <tr><td>Рев’юер</td><td>Softoria-HD або субагент середовища</td><td>Перевіряє код після тікета і всю гілку наприкінці.</td></tr>
+      <tr><td>Зір (vision)</td><td>Softoria-SD</td><td>Описує макети текстом. Перевіряє скріншоти UI.</td></tr>
+    </table>
+
+    <figure class="thumb">
+      <img src="images/roles.png" alt="Схема ролей: користувач, оркестратор, виконавець, рев’юер, зір" />
+      <figcaption>Ролі. Тільки виконавець змінює код проєкту.</figcaption>
+    </figure>
+
+    <h3>Етапи</h3>
+    <p>Один повний цикл від задачі до результату — це <b>прогін</b>. Прогін має вісім етапів:</p>
+    <ol>
+      <li><b>Підготовка</b> — soft-task налаштовує папку <code>.soft-task/</code> і відкриває дашборд.</li>
+      <li><b>Вимоги</b> — soft-task ділить ваш текст на пронумеровані вимоги (R01, R02…). Файл: <code>manifest.md</code>.</li>
+      <li><b>Брифінг</b> — оркестратор ставить вам питання про відкриті місця. До кожного питання є рекомендована відповідь.</li>
+      <li><b>Специфікація</b> — оркестратор описує технічне рішення: архітектуру, інтерфейси, правила проєкту.</li>
+      <li><b>План</b> — оркестратор ділить специфікацію на тікети і групує їх у хвилі.</li>
+      <li><b>Розробка</b> — виконавці пишуть код. Тікети з різними файлами йдуть паралельно (до трьох).</li>
+      <li><b>Рев’ю</b> — рев’юер перевіряє зміни.</li>
+      <li><b>Приймання</b> — окремий перевіряльник отримує тільки ваш текст задачі. Він перевіряє, що кожна вимога виконана.</li>
+    </ol>
+
+    <figure class="thumb">
+      <img src="images/flow.png" alt="Схема етапів прогону і перевірок G1–G4" />
+      <figcaption>Етапи прогону. G1–G4 — перевірки за вашими вимогами.</figcaption>
+    </figure>
+
+    <h3>Перевірки</h3>
+    <table class="wiki">
+      <tr><th>Перевірка</th><th>Коли</th><th>Що перевіряє</th></tr>
+      <tr><td>G1</td><td>Після брифінгу</td><td>Кожна вимога має статус.</td></tr>
+      <tr><td>G2</td><td>Після специфікації</td><td>Специфікація покриває всі вимоги.</td></tr>
+      <tr><td>G3</td><td>Після плану</td><td>Кожна вимога є в тікеті. Кожен тікет закриває вимогу.</td></tr>
+      <tr><td>G4</td><td>Наприкінці</td><td>Результат відповідає тексту задачі. Специфікацію перевіряльник не бачить.</td></tr>
+    </table>
 
     <h2 id="install">Встановлення</h2>
-    <p class="mut">Node 18+, OpenCode, <code>SOFTORIA_API_KEY</code>, корпоративний VPN для Softoria API.</p>
+    <p>Перед встановленням підготуйте:</p>
+    <ul>
+      <li>Node.js 18 або новіший.</li>
+      <li>OpenCode CLI (через нього працює Softoria).</li>
+      <li>Ключ Softoria у змінній <code>SOFTORIA_API_KEY</code>.</li>
+      <li>Корпоративний VPN. Без VPN Softoria API не відповідає.</li>
+    </ul>
     <pre><code>npx github:oleksandr-kupenko/soft-task install --harness all --yes
 export SOFTORIA_API_KEY="…"
+npx github:oleksandr-kupenko/soft-task doctor</code></pre>
+    <p>Після встановлення перезапустіть середовище. Тоді з’явиться команда <code>/soft-task</code>.</p>
 
-# у агенті:
-/soft-task task &lt;текст тікета або шлях до брифу&gt;</code></pre>
+    <h3>Прапорці інсталятора</h3>
+    <table class="wiki">
+      <tr><th>Команда / прапорець</th><th>Що робить</th></tr>
+      <tr><td><code>install</code></td><td>Встановлює skill і команду <code>/soft-task</code>.</td></tr>
+      <tr><td><code>--harness &lt;name&gt;</code></td><td>Середовище: <code>cursor</code>, <code>claude</code>, <code>opencode</code>, <code>codex</code> або <code>all</code> (за замовчуванням).</td></tr>
+      <tr><td><code>--global</code></td><td>Встановлює для всіх проєктів (за замовчуванням).</td></tr>
+      <tr><td><code>--project</code></td><td>Встановлює тільки в поточний проєкт.</td></tr>
+      <tr><td><code>--yes</code>, <code>-y</code></td><td>Додає провайдер Softoria в <code>~/.config/opencode/opencode.json</code> без питання. Ключ туди не пишеться — тільки посилання на змінну.</td></tr>
+      <tr><td><code>doctor</code></td><td>Перевіряє OpenCode, ключ, провайдер і робить тестовий запит до Softoria-HD.</td></tr>
+      <tr><td><code>uninstall</code></td><td>Видаляє skill і команду.</td></tr>
+    </table>
 
-    <h2 id="faq">FAQ</h2>
+    <h2 id="usage">Порядок використання</h2>
+    <ol>
+      <li>Увімкніть VPN.</li>
+      <li>Відкрийте проєкт у своєму середовищі.</li>
+      <li>Опишіть задачу. Коротку — прямо в команді. Велику — у файлі, наприклад <code>brief.md</code>. Пишіть звичайною мовою: що треба, що не треба, яким має бути результат.</li>
+      <li>Запустіть команду: <code>/soft-task [режим] [глибина] &lt;задача або шлях до файлу&gt;</code>.</li>
+      <li>Відкрийте дашборд. Адресу оркестратор пише в чат.</li>
+      <li>Відповідайте на питання брифінгу. Якщо не знаєте відповіді — прийміть рекомендовану.</li>
+      <li>Чекайте. Решту етапів soft-task виконує сам.</li>
+      <li>Прочитайте фінальний звіт і перевірте результат.</li>
+    </ol>
 
-    <details>
-      <summary>Хто виступає оркестратором?</summary>
-      <p>Агент і модель у сесії, де викликали <code>/soft-task</code>. Диспетчер, не автор коду додатку.</p>
-    </details>
-    <details>
-      <summary>Сервер дашборда піднімається сам?</summary>
-      <p>Так. <code>st.py init</code> стартує <code>http.server</code> і відкриває <code>dashboard.html</code>.</p>
-    </details>
-    <details>
-      <summary>Як змінити виконавців?</summary>
-      <p><code>.soft-task/config.json</code>: <code>engines.executor</code> (<code>softoria-hd</code>), <code>engines.reviewer</code> (<code>softoria-hd</code> | <code>harness</code>), <code>engines.vision</code> (<code>softoria-sd</code>). Можна назвати оверрайд у чаті на preflight.</p>
-    </details>
-    <details>
-      <summary>Чи можна зробити виконавцем модель Cursor / Claude / Codex?</summary>
-      <p>
-        Зараз executor завжди Softoria-HD через CLI (<code>run.sh</code> → <code>opencode run</code>).
-        Для <b>рев’юера</b> уже є <code>engines.reviewer: "harness"</code>: у Cursor — Task/субагент,
-        у Claude Code — Agent, у Codex — ізольований агент середовища (якщо є).
-        Окремого <code>engines.executor: "harness"</code> поки немає; коли з’явиться — той самий шлях
-        (нативний субагент harness), а не другий CLI.
-      </p>
-    </details>
-    <details>
-      <summary>Чому для Softoria саме CLI, а не субагент?</summary>
-      <p>
-        Один контракт для всіх harness: свіжий процес на тікет, лог + <code>SOFTORIA_EXIT</code>,
-        однаковий wait. Субагент Cursor/Claude прив’язаний до конкретного UI/API.
-        Softoria живе в OpenCode — тому executor за замовчуванням іде через <code>opencode</code> CLI.
-      </p>
-    </details>
-    <details>
-      <summary>Як запускається Softoria-HD?</summary>
-      <p><code>engines/softoria-hd/run.sh</code> → <code>opencode run --auto --standalone --model softoria/Softoria-HD#max</code>.</p>
-    </details>
-    <details>
-      <summary>VPN?</summary>
-      <p>Без корпоративного VPN Softoria API зависає або віддає 5xx. Спочатку VPN.</p>
-    </details>
-    <details>
-      <summary>Секрети?</summary>
-      <p>У репо не комітяться. У промпт — імена змінних; значення в env / локальному <code>.env</code>.</p>
-    </details>
+    <h3>Приклади</h3>
+    <pre><code>/soft-task Додай експорт інвойсів у CSV
+/soft-task task PROJ-123: пагінація інвойсів ламається на 2-й сторінці. Критерії: …
+/soft-task interview deep docs/brief.md
+/soft-task full strict docs/brief.md</code></pre>
+
+    <h3>Кольори дашборда</h3>
+    <table class="wiki">
+      <tr><th>Колір</th><th>Значення</th></tr>
+      <tr><td>Синій</td><td>soft-task працює сам.</td></tr>
+      <tr><td>Помаранчевий</td><td>soft-task чекає вашої відповіді.</td></tr>
+      <tr><td>Зелений</td><td>Прогін завершено успішно.</td></tr>
+      <tr><td>Червоний</td><td>Прогін зупинено з помилкою.</td></tr>
+    </table>
+
+    <h2 id="flags">Режими і глибина</h2>
+    <p>
+      Після <code>/soft-task</code> можна вказати два параметри: <b>режим</b> і <b>глибину</b>.
+      Обидва необов’язкові. Порядок слів не важливий. Решта тексту — це задача.
+      Режим і глибину можна змінити під час прогону — зміна діє з наступного етапу.
+    </p>
+
+    <h3>Режим — скільки питань ставить soft-task</h3>
+    <table class="wiki">
+      <tr><th>Режим</th><th>Що робить</th><th>Коли обрати</th></tr>
+      <tr><td><code>semi</code> (за замовчуванням)</td><td>Питає тільки там, де задача має розвилку. Решту робить сам.</td><td>Більшість задач.</td></tr>
+      <tr><td><code>full</code></td><td>Не питає нічого. На всі питання відповідає сам.</td><td>Мало часу. Задача проста й зрозуміла.</td></tr>
+      <tr><td><code>interview</code></td><td>Ставить багато детальних питань про продукт.</td><td>Нова фіча з неясними деталями.</td></tr>
+      <tr><td><code>manual</code></td><td>Як <code>interview</code>, плюс просить погодити специфікацію і план.</td><td>Потрібен повний технічний контроль.</td></tr>
+    </table>
+
+    <h3>Глибина — скільки soft-task додає від себе</h3>
+    <table class="wiki">
+      <tr><th>Глибина</th><th>Що робить</th><th>Коли обрати</th></tr>
+      <tr><td>normal (за замовчуванням)</td><td>Додає деталі там, де без них результат зламається.</td><td>Більшість задач.</td></tr>
+      <tr><td><code>strict</code></td><td>Робить тільки те, що написано. Нових функцій не додає. Помилки й порожні стани все одно обробляє.</td><td>Чітке ТЗ без варіантів.</td></tr>
+      <tr><td><code>deep</code></td><td>Перевіряє кожну вимогу: перший запуск, порожній екран, неправильне введення, обрив, права доступу. Витрачає більше часу.</td><td>Критична функціональність.</td></tr>
+      <tr><td><code>task</code></td><td>Профіль для тікета в існуючому репо. Мінімум документів, без нової архітектури.</td><td>Тікет з Jira або аналогу.</td></tr>
+    </table>
+    <div class="note">
+      Якщо ви вставили текст тікета (номер, критерії приймання, шляхи до файлів), soft-task сам обирає глибину <code>task</code>.
+    </div>
+
+    <h2 id="result">Результат</h2>
+    <p>Після прогону в репозиторії є:</p>
+    <ul>
+      <li><b>Код</b> — окремий коміт на кожен тікет.</li>
+      <li><b>Тести</b> — кожен тікет має команду тестів. Оркестратор запускає її перед комітом. Команду тестів soft-task визначає за стеком: <code>dotnet test</code>, Pest/PHPUnit, <code>npm test</code>, <code>pytest</code>, <code>go test</code>.</li>
+      <li><b>Рев’ю</b> — перевірка кожного тікета і всієї гілки.</li>
+      <li><b>Документи прогону</b> у <code>.soft-task/&lt;дата-назва&gt;/</code>: текст задачі, <code>manifest.md</code>, <code>spec.md</code>, <code>interfaces.md</code>, тікети.</li>
+      <li><b>Фінальний звіт</b> — які вимоги виконано, які ні і чому.</li>
+    </ul>
+
+    <h2 id="config">Налаштування виконавців</h2>
+    <p>Налаштування прогону зберігаються у файлі <code>.soft-task/config.json</code>:</p>
+    <pre><code>{
+  "engines": {
+    "executor": "softoria-hd",
+    "reviewer": "softoria-hd",
+    "vision":   "softoria-sd"
+  }
+}</code></pre>
+    <table class="wiki">
+      <tr><th>Параметр</th><th>Значення</th><th>Опис</th></tr>
+      <tr><td><code>engines.executor</code></td><td><code>softoria-hd</code></td><td>Хто пише код тікетів. Зараз підтримується тільки Softoria-HD.</td></tr>
+      <tr><td><code>engines.reviewer</code></td><td><code>softoria-hd</code> | <code>harness</code></td><td><code>harness</code> — субагент вашого середовища (Cursor, Claude Code, Codex).</td></tr>
+      <tr><td><code>engines.vision</code></td><td><code>softoria-sd</code></td><td>Хто працює із зображеннями.</td></tr>
+    </table>
+    <p>Файл можна не редагувати. Скажіть оркестратору на старті, наприклад: «рев’ю роби субагентом Cursor».</p>
+
+    <h2 id="faq">Часті питання</h2>
+
+    <h3>Хто виступає оркестратором?</h3>
+    <p>Агент і модель у тій сесії, де ви викликали <code>/soft-task</code>.</p>
+
+    <h3>Дашборд запускається сам?</h3>
+    <p>Так. На етапі підготовки soft-task запускає локальний сервер і відкриває <code>dashboard.html</code>.</p>
+
+    <h3>Як запускається Softoria-HD?</h3>
+    <p>Через OpenCode CLI. Скрипт <code>engines/softoria-hd/run.sh</code> викликає <code>opencode run --standalone</code>. Один тікет — один процес.</p>
+
+    <h3>Чи можна зробити виконавцем модель Cursor, Claude або Codex?</h3>
+    <p>
+      Для рев’ю — так: <code>engines.reviewer: "harness"</code>. Для виконавця — поки ні.
+      Коли підтримка з’явиться, виконавця запускатиме нативний субагент середовища, а не CLI.
+    </p>
+
+    <h3>Чому Softoria запускається через CLI, а не як субагент?</h3>
+    <p>Softoria доступна тільки через OpenCode. CLI працює однаково в усіх середовищах.</p>
+
+    <h3>Прогін завис або повертає помилку 5xx</h3>
+    <p>Перевірте VPN. Без VPN Softoria API не відповідає.</p>
+
+    <h3>Що з ключами і секретами?</h3>
+    <p>soft-task не просить значення ключів. Ключ зберігається тільки у вашому середовищі. Секрети з тексту задачі soft-task видаляє до запису на диск.</p>
 
     <footer>
-      <span>MIT · Autopilot fork · NOTICE</span>
-      <span>
-        <a href="https://github.com/oleksandr-kupenko/soft-task">repo</a>
-        ·
-        <a href="https://github.com/oleksandr-kupenko/soft-task/blob/main/README.md">README (EN)</a>
-      </span>
+      soft-task · MIT · Основа: <a href="https://github.com/nick-vels/skills">Autopilot</a> (MIT), див. <a href="https://github.com/oleksandr-kupenko/soft-task/blob/main/NOTICE">NOTICE</a> ·
+      <a href="https://github.com/oleksandr-kupenko/soft-task/blob/main/README.md">README (EN)</a>
     </footer>
   </div>
 </body>
