@@ -1,6 +1,6 @@
 # Phase 8 — Acceptance
 
-`st.py stage final`. Three subagents, no contact between them, each answering a different question. The blind checker and the ADR agent go out **in one message**; the memory agent goes out when the blind checker has returned, because it needs the commands the checker proved:
+`st.py stage final`. Three agents, no contact between them, each answering a different question. The blind checker is role `acceptance`; the ADR and memory agents are role `helper` — engines and launch in `phases/engines.md`. The blind checker and the ADR agent go out **in one message**; the memory agent goes out when the blind checker has returned, because it needs the commands the checker proved:
 
 | Agent | Question | Receives | Never receives |
 |---|---|---|---|

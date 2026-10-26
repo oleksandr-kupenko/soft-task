@@ -19,6 +19,8 @@ See also the diagrams in [`images/`](images/) and the root [README](../README.md
 |---|---|
 | Executor | Softoria-HD (`engines/softoria-hd/run.sh`) |
 | Reviewer | Softoria-HD (or `harness`) |
+| Acceptance (G4) | Softoria-HD (or `harness`) |
+| Helper (exploration, G2, ADR, memory) | Softoria-HD (or `harness`) |
 | Vision | Softoria-SD (`engines/vision/see.sh`) |
 
 Override in `.soft-task/config.json`.

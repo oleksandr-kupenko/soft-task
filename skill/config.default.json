@@ -5,6 +5,8 @@
   "engines": {
     "executor": "softoria-hd",
     "reviewer": "softoria-hd",
+    "acceptance": "softoria-hd",
+    "helper": "softoria-hd",
     "vision": "softoria-sd"
   },
   "softoria": {

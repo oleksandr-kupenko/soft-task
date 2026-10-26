@@ -30,15 +30,15 @@ Rely on the background-task **completion notification**. Peek at `tmp/softoria/<
 
 If you orphaned a wave: attach one tracked watcher per log (`phases/5-wait.md` recovery); do not relaunch finished tickets.
 
-## Subagent (reviewer = harness)
+## Subagent (any role set to `harness`)
 
-OpenCode has no Cursor-style Task tool. Review with Softoria-HD:
+OpenCode has no Cursor-style Task tool. Every role — `reviewer`, `acceptance`, `helper` — runs on Softoria-HD even when its key is `harness` (`phases/engines.md`):
 
 ```bash
-<skillRoot>/engines/softoria-hd/run.sh tmp/softoria/<run>-NN-review.prompt.md "review-NN" "$PWD"
+<skillRoot>/engines/softoria-hd/run.sh tmp/softoria/<run>-<role>.prompt.md "<run>-<role>" "$PWD" <variant>
 ```
 
-Always a **fresh** `opencode run --standalone` so review context dies with the review.
+Always a **fresh** `opencode run --standalone` so the agent's context dies with the launch.
 
 ## Dashboard
 

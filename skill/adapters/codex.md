@@ -24,9 +24,9 @@ while ! grep -q '^SOFTORIA_EXIT=' tmp/softoria/<slug>.log 2>/dev/null; do sleep 
 
 Never promise to «check later» without such a waiter.
 
-## Subagent (reviewer = harness)
+## Subagent (any role set to `harness`)
 
-If Codex can spawn an isolated agent, use that. Otherwise Softoria-HD via `run.sh` with a review prompt.
+Used for `reviewer`, `acceptance` or `helper` when its key is `harness` (`phases/engines.md`). If Codex can spawn an isolated agent, use one fresh agent per launch. Otherwise the role falls back to Softoria-HD via `run.sh` — say so once in preflight.
 
 ## Dashboard
 

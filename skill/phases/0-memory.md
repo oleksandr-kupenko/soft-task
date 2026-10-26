@@ -76,7 +76,7 @@ Written before anything is built, so an interrupted run still leaves something t
 | почему строка такая | `git blame -L <с>,<по> <файл>`, затем `git show <sha>` |
 | что внутри коммита | `git show --stat <sha>` |
 
-Срез длиннее ~30 коммитов — отдай его субагенту и возьми выжимку в десять строк.
+Срез длиннее ~30 коммитов — отдай его агенту роли `helper` (`phases/engines.md`) и возьми выжимку в десять строк.
 
 Коммит: заголовок — что (`fix: даты в одном формате`), тело — почему, трейлер
 `--trailer "Requirements: R02"`, если правка касается требования из `manifest.md`.

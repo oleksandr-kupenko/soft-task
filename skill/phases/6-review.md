@@ -19,7 +19,7 @@ Merged or ranked together, one axis masks another. **Which axis a finding belong
 
 ## Point review
 
-**One fresh reviewer per review** — never kept alive across tickets. Default engine is Softoria-HD (`engines.reviewer: softoria-hd` in config): launch via `engines/softoria-hd/run.sh` with a review prompt. If `engines.reviewer` is `harness`, use the harness adapter's subagent call instead.
+**One fresh reviewer per review** — never kept alive across tickets. Role `reviewer` — engine and launch in `phases/engines.md` (default Softoria-HD via `run.sh`; `harness` → the adapter's subagent call).
 
 **Launch it in the background right after the commit** — `st.py ticket NN review`, then the reviewer — and go on with the build. Waiting on a point review is never a reason to hold a wave.
 
@@ -48,7 +48,7 @@ Everything else waits for the whole-branch review. **You do not widen the list**
 
 After the build: `st.py stage review`.
 
-**One fresh Softoria-HD (or harness) reviewer** — at T3 with a large diff, up to three in parallel, each given a group of zones. It gets `prompts/review.md` (mode «ветка» / `branch`), the range `git diff <baseCommit>..HEAD` (`baseCommit` in `state.js`) to run itself, `spec.md` and `interfaces.md` by path, the repo's conventions, and the deferred findings from `state.js` → `concerns`. It may open files outside the diff where an interaction needs it. The Manifest axis is not judged here — the blind acceptance in Phase 8 closes it against the brief.
+**One fresh reviewer** (role `reviewer`, `phases/engines.md`) — at T3 with a large diff, up to three in parallel, each given a group of zones. It gets `prompts/review.md` (mode «ветка» / `branch`), the range `git diff <baseCommit>..HEAD` (`baseCommit` in `state.js`) to run itself, `spec.md` and `interfaces.md` by path, the repo's conventions, and the deferred findings from `state.js` → `concerns`. It may open files outside the diff where an interaction needs it. The Manifest axis is not judged here — the blind acceptance in Phase 8 closes it against the brief.
 
 It returns every finding sorted into three: **fix now** — it costs more to leave than to close, and the fix is bounded; **report** — real, not worth holding delivery for; **drop** — taste, or the code it pointed at is gone. Anything repeated across three or more tickets is **fix now**: that is a convention the project never settled. A security finding is fix now or report — never drop.
 

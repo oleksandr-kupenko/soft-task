@@ -221,6 +221,8 @@
       <tr><td>Оркестратор</td><td>Агент у сесії, де ви викликали <code>/soft-task</code></td><td>Планує, запускає виконавців, комітить, перевіряє. Код проєкту не пише.</td></tr>
       <tr><td>Виконавець</td><td>Softoria-HD</td><td>Пише код одного тікета. Кожен тікет — новий процес.</td></tr>
       <tr><td>Рев’юер</td><td>Softoria-HD або субагент середовища</td><td>Перевіряє код після тікета і всю гілку наприкінці.</td></tr>
+      <tr><td>Приймальник</td><td>Softoria-HD або субагент середовища</td><td>Наприкінці перевіряє результат тільки за вашим текстом задачі (G4).</td></tr>
+      <tr><td>Допоміжний агент</td><td>Softoria-HD або субагент середовища</td><td>Не пише код проєкту. Вивчає репо, перевіряє специфікацію (G2), пише ADR і пам’ять проєкту.</td></tr>
       <tr><td>Зір (vision)</td><td>Softoria-SD</td><td>Описує макети текстом. Перевіряє скріншоти UI.</td></tr>
     </table>
 
@@ -239,7 +241,7 @@
       <li><b>План</b> — оркестратор ділить специфікацію на тікети і групує їх у хвилі.</li>
       <li><b>Розробка</b> — виконавці пишуть код. Тікети з різними файлами йдуть паралельно (до трьох).</li>
       <li><b>Рев’ю</b> — рев’юер перевіряє зміни.</li>
-      <li><b>Приймання</b> — окремий перевіряльник отримує тільки ваш текст задачі. Він перевіряє, що кожна вимога виконана.</li>
+      <li><b>Приймання</b> — приймальник отримує тільки ваш текст задачі. Він запускає проєкт і перевіряє, що кожна вимога виконана.</li>
     </ol>
 
     <figure class="thumb">
@@ -253,7 +255,7 @@
       <tr><td>G1</td><td>Після брифінгу</td><td>Кожна вимога має статус.</td></tr>
       <tr><td>G2</td><td>Після специфікації</td><td>Специфікація покриває всі вимоги.</td></tr>
       <tr><td>G3</td><td>Після плану</td><td>Кожна вимога є в тікеті. Кожен тікет закриває вимогу.</td></tr>
-      <tr><td>G4</td><td>Наприкінці</td><td>Результат відповідає тексту задачі. Специфікацію перевіряльник не бачить.</td></tr>
+      <tr><td>G4</td><td>Наприкінці</td><td>Результат відповідає тексту задачі. Специфікацію приймальник не бачить.</td></tr>
     </table>
 
     <h2 id="install">Встановлення</h2>
@@ -350,18 +352,26 @@ npx github:oleksandr-kupenko/soft-task doctor</code></pre>
     <p>Налаштування прогону зберігаються у файлі <code>.soft-task/config.json</code>:</p>
     <pre><code>{
   "engines": {
-    "executor": "softoria-hd",
-    "reviewer": "softoria-hd",
-    "vision":   "softoria-sd"
+    "executor":   "softoria-hd",
+    "reviewer":   "softoria-hd",
+    "acceptance": "softoria-hd",
+    "helper":     "softoria-hd",
+    "vision":     "softoria-sd"
   }
 }</code></pre>
     <table class="wiki">
       <tr><th>Параметр</th><th>Значення</th><th>Опис</th></tr>
       <tr><td><code>engines.executor</code></td><td><code>softoria-hd</code></td><td>Хто пише код тікетів. Зараз підтримується тільки Softoria-HD.</td></tr>
-      <tr><td><code>engines.reviewer</code></td><td><code>softoria-hd</code> | <code>harness</code></td><td><code>harness</code> — субагент вашого середовища (Cursor, Claude Code, Codex).</td></tr>
+      <tr><td><code>engines.reviewer</code></td><td><code>softoria-hd</code> | <code>harness</code></td><td>Хто робить рев’ю.</td></tr>
+      <tr><td><code>engines.acceptance</code></td><td><code>softoria-hd</code> | <code>harness</code></td><td>Хто робить фінальне приймання (G4).</td></tr>
+      <tr><td><code>engines.helper</code></td><td><code>softoria-hd</code> | <code>harness</code></td><td>Хто виконує допоміжні задачі: вивчення репо, перевірка G2, ADR, пам’ять.</td></tr>
       <tr><td><code>engines.vision</code></td><td><code>softoria-sd</code></td><td>Хто працює із зображеннями.</td></tr>
     </table>
-    <p>Файл можна не редагувати. Скажіть оркестратору на старті, наприклад: «рев’ю роби субагентом Cursor».</p>
+    <p>
+      <code>harness</code> — новий субагент вашого середовища: у Cursor — Task, у Claude Code — Agent, у Codex — ізольований агент.
+      Оркестратор сам ці ролі не виконує. В OpenCode субагентів немає, тому там усі ролі працюють на Softoria-HD.
+    </p>
+    <p>Файл можна не редагувати. Скажіть оркестратору на старті, наприклад: «рев’ю і приймання роби субагентом Cursor».</p>
 
     <h2 id="faq">Часті питання</h2>
 
@@ -374,9 +384,15 @@ npx github:oleksandr-kupenko/soft-task doctor</code></pre>
     <h3>Як запускається Softoria-HD?</h3>
     <p>Через OpenCode CLI. Скрипт <code>engines/softoria-hd/run.sh</code> викликає <code>opencode run --standalone</code>. Один тікет — один процес.</p>
 
+    <h3>Хто робить рев’ю — оркестратор?</h3>
+    <p>
+      Ні. Рев’ю, приймання і допоміжні задачі виконує окремий новий агент:
+      Softoria-HD або субагент середовища. Оркестратор тільки запускає тести тікета і перевіряє, що виконавець не вийшов за свої файли.
+    </p>
+
     <h3>Чи можна зробити виконавцем модель Cursor, Claude або Codex?</h3>
     <p>
-      Для рев’ю — так: <code>engines.reviewer: "harness"</code>. Для виконавця — поки ні.
+      Для рев’ю, приймання і допоміжних задач — так: значення <code>harness</code>. Для виконавця — поки ні.
       Коли підтримка з’явиться, виконавця запускатиме нативний субагент середовища, а не CLI.
     </p>
 

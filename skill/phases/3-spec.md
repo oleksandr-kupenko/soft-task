@@ -2,7 +2,7 @@
 
 `st.py stage spec`. Turn the manifest and the answers into `.soft-task/<dir>/spec.md` — the contract the executors and reviewers work from. The user sees two lines; the file is the spec.
 
-**An existing codebase is explored first.** When Phase 0 found code, one subagent on the cheaper model reads the repository once and writes `.soft-task/<dir>/notes.md`: where things live, the conventions in use, the commands that run it, and **the exact names of the entities, fields and functions the work will touch** — so boundaries are decided against the code that exists, and two parallel tickets do not call one field `blockedSince` and `blockedOn`. Every executor reads it later instead of exploring from scratch. A new repo has nothing to explore.
+**An existing codebase is explored first.** When Phase 0 found code, one agent — role `helper` (`phases/engines.md`) — reads the repository once and writes `.soft-task/<dir>/notes.md`: where things live, the conventions in use, the commands that run it, and **the exact names of the entities, fields and functions the work will touch** — so boundaries are decided against the code that exists, and two parallel tickets do not call one field `blockedSince` and `blockedOn`. Every executor reads it later instead of exploring from scratch. A new repo has nothing to explore.
 
 **After a landed run, `carried.md` comes in twice** (`phases/0-preflight.md` §5). Its «Изменено после сборки» goes to the exploring subagent with the brief «эти места менялись после прошлой сборки — опиши их по коду, как они есть сейчас». Its «Договорились» goes into `interfaces.md` under the project rules, word for word, so every executor and reviewer gets it without reading the history: a spec section that would break one is either rewritten or, if the new brief asks for exactly that, put to the user as one line — never decided by you.
 
@@ -107,7 +107,7 @@ Which section covers which requirement lives in the manifest's «Где» column
 
 **1. Your own pass.** Every manifest row: `open` → `in-spec` with its section in «Где», or → `deferred` with its «Вне рамок» line. **Zero `open`**, or the spec is incomplete — write the missing section.
 
-**2. The independent coverage check** — the half that works. You wrote the spec, so you cannot see what you did not write. Spawn a subagent with **exactly the named files** — every `*-brief.md` in `dir`, oldest first, and `spec.md` — never the manifest (your reading of the brief), the conversation or a summary; and tell it not to go looking, because the files sit in `.soft-task/` beside the manifest:
+**2. The independent coverage check** — the half that works. You wrote the spec, so you cannot see what you did not write. Launch an agent — role `helper` (`phases/engines.md`) — with **exactly the named files** — every `*-brief.md` in `dir`, oldest first, and `spec.md` — never the manifest (your reading of the brief), the conversation or a summary; and tell it not to go looking, because the files sit in `.soft-task/` beside the manifest:
 
 > Открой только названные файлы и больше ничего — ни `manifest.md`,
 > ни остальное содержимое `.soft-task/`. Твоя ценность в том, что ты

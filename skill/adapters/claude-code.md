@@ -20,13 +20,15 @@ Wave = several background Bash calls in one message. **Never** one Bash that bac
 
 Use the background-task completion notification. Peek at `tmp/softoria/<slug>.log` only when landing. Orphan recovery: per-ticket log watcher, separate Bash each (`phases/5-wait.md`).
 
-## Subagent (reviewer = harness)
+## Subagent (any role set to `harness`)
+
+Used for `reviewer`, `acceptance` or `helper` when its key in `config.json` is `harness` (`phases/engines.md`):
 
 ```
-Agent tool — fresh agent per review
+Agent tool — one fresh agent per launch
 ```
 
-When `engines.reviewer` is `softoria-hd` (default), use `run.sh` instead (same background rules).
+A strong model for `reviewer` and `acceptance`, a cheaper one for `helper`. Roles on `softoria-hd` (default) use `run.sh` instead (same background rules).
 
 ## Dashboard
 

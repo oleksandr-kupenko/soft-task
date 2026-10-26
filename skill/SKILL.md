@@ -4,7 +4,7 @@ description: Task-first AI build framework — brief or ticket → requirements 
 disable-model-invocation: true
 argument-hint: "[full|semi|interview|manual] [strict|deep|task] <brief path | ticket text | what to build>"
 metadata:
-  version: "0.1.1"
+  version: "0.1.3"
 ---
 
 # soft-task
@@ -24,9 +24,11 @@ soft-task takes a **task or a brief** and delivers working code **in one dialogu
 | **Orchestrator** (you) | the session agent — OpenCode, Cursor, Claude Code, or Codex | — |
 | **Executor** (every ticket) | Softoria-HD via `opencode run` | `.soft-task/config.json` → `engines.executor` |
 | **Reviewer** | Softoria-HD (same engine), or the harness subagent | `engines.reviewer`: `softoria-hd` \| `harness` |
+| **Acceptance** (blind checker, G4) | Softoria-HD | `engines.acceptance`: `softoria-hd` \| `harness` |
+| **Helper** (exploration, G2 reader, ADR, memory) | Softoria-HD | `engines.helper`: `softoria-hd` \| `harness` |
 | **Vision** | Softoria-SD via `engines/vision/see.sh` | `engines.vision` |
 
-Read `adapters/<harness>.md` once in preflight for how *this* session runs background shells, waits, and opens the dashboard. Read `phases/5-subagents.md` for how tickets are launched (Softoria-HD is the default engine).
+**Every agent you launch goes through `phases/engines.md`** — it maps each role to its engine and says how to launch, read and check it. The orchestrator never does a role's work itself. Read `adapters/<harness>.md` once in preflight for how *this* session runs background shells, waits, and opens the dashboard. Read `phases/5-subagents.md` for how tickets are launched.
 
 ## Reading this skill
 
@@ -34,7 +36,7 @@ This file is the orchestrator: order, gates, the rules that never lose. Each pha
 
 | Phase | Read | Produces |
 |---|---|---|
-| 0 Preflight | `phases/0-modes.md`, `phases/0-preflight.md`, then `0-memory.md`, `0-instruments.md`, `adapters/<harness>.md` | mode announced, config written, dashboard open |
+| 0 Preflight | `phases/0-modes.md`, `phases/0-preflight.md`, then `0-memory.md`, `0-instruments.md`, `adapters/<harness>.md`, `phases/engines.md` | mode announced, config written, dashboard open |
 | 1 Manifest | `phases/1-manifest.md` | `<date>-brief.md`, `manifest.md` |
 | 2 Briefing | `phases/2-briefing.md` (+ `2-adversarial.md` when it runs) | answers recorded into the manifest |
 | 3 Spec | `phases/3-spec.md` | `notes.md`, `spec.md`, `interfaces.md` |

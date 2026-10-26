@@ -31,7 +31,7 @@ Two counters, both capped at two: `repairs` (дозапросы) and `retries` (
 - **A reviewed ticket's repair is re-reviewed, scoped to the fix** — mode «ремонт» in `prompts/review.md`: a fresh reviewer gets the diff of the repair commit and the conditions, verdicts each closed or not, and flags new breakage inside the fix only. Never the whole ticket again. A repair of an unreviewed ticket (a red check) needs only the check green again.
 - **One re-review per ticket, then it is finished.** What the re-review still finds open goes to the whole-branch review as a concern (`st.py add concerns`) — it is fixed in `F1` or reported there, never in a third round here. A red check stays blocking: it is a дозапрос, closed by the check, not by another review. A sanitizer a reviewer can always find one more bypass for is the typical case.
 - **Two дозапроса into one context, then the right-hand column.**
-- If the harness cannot continue a subagent, the fallback is a fresh context with the full ticket prompt plus the finding — never your own keyboard.
+- If the executor's session cannot be resumed, the fallback is a fresh executor (`phases/engines.md`) with the full ticket prompt plus the finding — never your own keyboard.
 
 ## BLOCKED for a missing dependency
 

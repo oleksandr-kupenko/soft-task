@@ -94,9 +94,11 @@ Per project, soft-task writes `.soft-task/` (committed): brief, manifest, spec, 
 1. **Orchestrator** — your session agent. Reads phases, runs `st.py`, never writes app code.  
 2. **Executor** — Softoria-HD via `opencode run --standalone` (fresh context per ticket).  
 3. **Reviewer** — Softoria-HD by default; set `engines.reviewer: "harness"` to use the host agent’s subagent.  
-4. **Vision** — Softoria-SD through `engines/vision/see.sh` for design specs and screenshot QA.
+4. **Acceptance** — the blind checker (G4); `engines.acceptance`, same values.  
+5. **Helper** — agents that write no project code (repo exploration, G2 reader, ADR, memory); `engines.helper`, same values.  
+6. **Vision** — Softoria-SD through `engines/vision/see.sh` for design specs and screenshot QA.
 
-Harness details: `skill/adapters/{opencode,cursor,claude-code,codex}.md`.
+Every agent launch is routed by role in `skill/phases/engines.md`; the orchestrator never does a role's work itself. Harness details: `skill/adapters/{opencode,cursor,claude-code,codex}.md`.
 
 ## Testing helpers
 

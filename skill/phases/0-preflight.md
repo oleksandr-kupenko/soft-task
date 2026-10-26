@@ -57,9 +57,9 @@ Do not paste their contents into your context — paths only. Executors receive 
 
 ## 2. Harness + config
 
-Detect the harness (OpenCode / Cursor / Claude Code / Codex) from available tools and env. Read `adapters/<harness>.md` once.
+Detect the harness (OpenCode / Cursor / Claude Code / Codex) from available tools and env. Read `adapters/<harness>.md` and `phases/engines.md` once.
 
-Copy `config.default.json` → `.soft-task/config.json` if missing. Set `harness`, `language` (`auto` or en/uk/ru from the user's message), `profile` (`task` when depth is task), and keep engine defaults unless the user named overrides.
+Copy `config.default.json` → `.soft-task/config.json` if missing. Set `harness`, `language` (`auto` or en/uk/ru from the user's message), `profile` (`task` when depth is task), and keep engine defaults unless the user named overrides — «рев'ю/приймання/допоміжні агенти субагентом Cursor» → `engines.reviewer` / `acceptance` / `helper` = `harness`. A config without `acceptance` or `helper` (older run) gets them added as `softoria-hd`.
 
 ## 3. Git
 

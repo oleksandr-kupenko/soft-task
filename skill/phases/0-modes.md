@@ -46,7 +46,7 @@ Once, before Phase 1. **A hint, not a question** — say it and go.
 Mode: semi · depth: normal — I'll ask only what the task leaves open, then build.
 Dashboard: http://localhost:PORT/dashboard.html
 Project memory — AGENTS.md (+ CLAUDE.md pointer).
-Harness: <opencode|cursor|claude-code|codex> · executor: Softoria-HD · vision: Softoria-SD
+Harness: <opencode|cursor|claude-code|codex> · executor: Softoria-HD · review: <engine> · acceptance: <engine> · helpers: <engine> · vision: Softoria-SD
 
 You can switch anytime:
 • "full" — ask nothing

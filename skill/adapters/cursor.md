@@ -39,15 +39,17 @@ Full contract: `phases/5-wait.md`.
 2. Or `AwaitShell` on the job id(s).  
 3. Fallback if a wave was orphaned: one tracked Shell per ticket that loops until `SOFTORIA_EXIT=` appears in that ticket's log (`phases/5-wait.md` recovery) — still **separate** Shell calls, never `&`.
 
-## Subagent (reviewer = harness)
+## Subagent (any role set to `harness`)
+
+Used for `reviewer`, `acceptance` or `helper` when its key in `config.json` is `harness` (`phases/engines.md`):
 
 ```
 Task tool, subagent_type: generalPurpose
 ```
 
-Use a capable model for review when `engines.reviewer` is `harness`. Never use `inherit` unless the session model itself is the intended reviewer.
+One fresh Task per launch. Pick the model by role: a strong model for `reviewer` and `acceptance`, a cheaper one for `helper`. Never `inherit` unless the session model itself is the intended agent. The Task prompt is the same prompt file you would give Softoria; the answer comes back as the Task result.
 
-When `engines.reviewer` is `softoria-hd` (default), launch Softoria-HD via `run.sh` the same way as executors (own Shell, `block_until_ms: 0`).
+Roles on `softoria-hd` (default) launch via `run.sh` the same way as executors (own Shell, `block_until_ms: 0`).
 
 ## Dashboard
 
