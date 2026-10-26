@@ -4,9 +4,9 @@
 
 Derived from [Autopilot](https://github.com/nick-vels/skills) (MIT). See [NOTICE](NOTICE).
 
-![Roles](docs/images/roles.svg)
+![Roles](docs/images/roles.png)
 
-![Flow](docs/images/flow.svg)
+![Flow](docs/images/flow.png)
 
 ```mermaid
 flowchart LR
