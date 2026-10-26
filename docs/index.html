@@ -202,8 +202,22 @@ export SOFTORIA_API_KEY="…"
       <p><code>.soft-task/config.json</code>: <code>engines.executor</code> (<code>softoria-hd</code>), <code>engines.reviewer</code> (<code>softoria-hd</code> | <code>harness</code>), <code>engines.vision</code> (<code>softoria-sd</code>). Можна назвати оверрайд у чаті на preflight.</p>
     </details>
     <details>
-      <summary>Executor = модель Codex / Cursor?</summary>
-      <p>Для рев’юера — <code>engines.reviewer: "harness"</code>. Окремого executor-двигуна під Codex немає; тікети йдуть у Softoria через <code>run.sh</code>.</p>
+      <summary>Чи можна зробити виконавцем модель Cursor / Claude / Codex?</summary>
+      <p>
+        Зараз executor завжди Softoria-HD через CLI (<code>run.sh</code> → <code>opencode run</code>).
+        Для <b>рев’юера</b> уже є <code>engines.reviewer: "harness"</code>: у Cursor — Task/субагент,
+        у Claude Code — Agent, у Codex — ізольований агент середовища (якщо є).
+        Окремого <code>engines.executor: "harness"</code> поки немає; коли з’явиться — той самий шлях
+        (нативний субагент harness), а не другий CLI.
+      </p>
+    </details>
+    <details>
+      <summary>Чому для Softoria саме CLI, а не субагент?</summary>
+      <p>
+        Один контракт для всіх harness: свіжий процес на тікет, лог + <code>SOFTORIA_EXIT</code>,
+        однаковий wait. Субагент Cursor/Claude прив’язаний до конкретного UI/API.
+        Softoria живе в OpenCode — тому executor за замовчуванням іде через <code>opencode</code> CLI.
+      </p>
     </details>
     <details>
       <summary>Як запускається Softoria-HD?</summary>
