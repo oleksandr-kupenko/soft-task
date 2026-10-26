@@ -4,7 +4,7 @@ description: Task-first AI build framework — brief or ticket → requirements 
 disable-model-invocation: true
 argument-hint: "[full|semi|interview|manual] [strict|deep|task] <brief path | ticket text | what to build>"
 metadata:
-  version: "0.1.3"
+  version: "0.1.4"
 ---
 
 # soft-task

@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.4
+
+- **Softoria gateway outages (502).** `run.sh` now retries gateway/network errors in-process (`SOFTORIA_RETRIES`, default 3; `SOFTORIA_BACKOFF`, default `30 90 180`) and resumes the **same opencode session**. The log ends with `SOFTORIA_STATUS=ok|gateway|vpn|auth|error`, `SOFTORIA_RETRIES`, `SOFTORIA_SESSION`; `SOFTORIA_EXIT` stays the last line.
+- `run.sh` takes an optional 5th argument `session-id`; prompt `-` sends a built-in «continue after outage» message. Earlier logs with the same title rotate to `<slug>.log.N`; the diff base is kept on resume.
+- New `engines/softoria-hd/probe.sh`: one 1-token request that tells `vpn` (no connection) from `gateway` (5xx/429/hang) and `auth`.
+- New `engines/softoria-hd/wait-softoria.sh`: a tracked waiter. Its exit wakes the orchestrator, which resumes paused tickets by session (`phases/5-subagents.md` «Gateway down»).
+- `doctor` uses the probe; a missing `SOFTORIA_API_KEY` env is a warning when `opencode.json` holds the key.
+
 ## 0.1.3
 
 - **Engine routing for every agent** (`skill/phases/engines.md`): new roles `acceptance` (blind checker, G4) and `helper` (repo exploration, G2 reader, ADR, memory, history digest), each configurable as `softoria-hd` | `harness`. Previously these agents had no engine and silently ran on the harness default.

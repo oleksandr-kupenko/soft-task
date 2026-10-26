@@ -31,7 +31,7 @@ Values: `softoria-hd` or `harness`. `vision` takes only `softoria-sd`.
    <skillRoot>/engines/softoria-hd/run.sh tmp/softoria/<run>-<role>.prompt.md "<run>-<role>" "$PWD" <variant>
    ```
 
-3. **Read the answer** — the text after the last `=== RESULT ===` in `tmp/softoria/<slug>.log`. No marker → resume once with `-s <sessionID>` asking for the result block; still none → treat the role as not run and say so in the report.
+3. **Read the answer** — the text after the last `=== RESULT ===` in `tmp/softoria/<slug>.log`. No marker → resume once in a new background shell: `run.sh <ask-for-result>.md "<run>-<role>" "$PWD" <variant> <SOFTORIA_SESSION>`; still none → treat the role as not run and say so in the report. `SOFTORIA_STATUS` other than `ok` → handle it exactly as for a ticket (`phases/5-subagents.md`, step 5 and «Gateway down»).
 
 4. **Check what it touched** — `<skillRoot>/engines/softoria-hd/diff.sh <slug> "$PWD" --stat`. Each role may write only:
 

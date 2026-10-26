@@ -109,7 +109,7 @@ Every agent launch is routed by role in `skill/phases/engines.md`; the orchestra
 
 ## FAQ
 
-**VPN?** Softoria API needs the corporate VPN. If a run hangs or returns 5xx, turn VPN on and retry — do not debug anything else first.
+**VPN or 502?** Softoria API needs the corporate VPN. `engines/softoria-hd/probe.sh` tells the two failures apart: no connection means VPN, an HTTP 5xx/429 means the Softoria gateway itself. On a gateway error `run.sh` retries up to 3 times (30/90/180 s) and resumes the **same session**. If the gateway is still down, the orchestrator pauses the tickets and starts `wait-softoria.sh` as a tracked background job. Its exit wakes the orchestrator, which then resumes every paused ticket by session. `soft-task doctor` runs the same probe.
 
 **No vision?** Softoria-HD is text-only. Visual tickets always go through Softoria-SD (`see.sh`). Backend-only tasks skip vision.
 

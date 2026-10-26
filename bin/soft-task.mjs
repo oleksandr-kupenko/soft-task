@@ -298,7 +298,7 @@ function cmdDoctor() {
   }
 
   if (process.env.SOFTORIA_API_KEY) ok("SOFTORIA_API_KEY is set (value not shown)");
-  else bad("SOFTORIA_API_KEY is not set");
+  else warn("SOFTORIA_API_KEY is not set — fine if opencode.json holds the key (the probe below tells)");
 
   const rootMarker = join(HOME, ".config", "soft-task", "root");
   if (process.env.SOFT_TASK_ROOT || existsSync(rootMarker)) {
@@ -322,23 +322,23 @@ function cmdDoctor() {
     warn("no ~/.config/opencode/opencode.json");
   }
 
-  // API ping (name only; no key echo)
-  if (oc && process.env.SOFTORIA_API_KEY) {
-    console.log("Pinging Softoria-HD (1 token)…");
-    const ping = spawnSync(
-      "opencode",
-      ["run", "--auto", "--standalone", "--pure", "--model", "softoria/Softoria-HD#low", "--", "Reply with exactly: pong"],
-      { encoding: "utf8", timeout: 120000, env: process.env },
-    );
-    const out = (ping.stdout || "") + (ping.stderr || "");
-    if (ping.status === 0 && /pong/i.test(out)) ok("Softoria-HD ping ok");
-    else if (/timeout|ECONN|ENOTFOUND|5\d\d|fetch|network/i.test(out) || ping.status !== 0) {
-      bad("Softoria-HD ping failed — enable corporate VPN and check SOFTORIA_API_KEY");
-      if (out.trim()) lines.push("      " + out.trim().split("\n").slice(-3).join(" | "));
-    } else {
-      warn("Softoria-HD ping inconclusive");
-    }
-  }
+  // API probe (1 token; the key is never printed)
+  console.log("Probing Softoria-HD (1 token)…");
+  const probe = spawnSync("bash", [join(ROOT, "engines", "softoria-hd", "probe.sh")], {
+    encoding: "utf8",
+    timeout: 120000,
+    env: process.env,
+  });
+  const state = (/PROBE=(\w+)/.exec(probe.stdout || "") || [])[1];
+  const http = (/http=(\S+)/.exec(probe.stdout || "") || [])[1] || "-";
+  const probeMsg = {
+    ok: () => ok("Softoria-HD answers"),
+    gateway: () => bad(`Softoria gateway error (http ${http}) — VPN is fine, Softoria itself is down; retry later`),
+    vpn: () => bad("Softoria unreachable — enable corporate VPN"),
+    auth: () => bad(`Softoria rejected the key (http ${http}) — check SOFTORIA_API_KEY`),
+    nokey: () => warn("no Softoria key — set SOFTORIA_API_KEY"),
+  };
+  (probeMsg[state] || (() => warn("Softoria probe inconclusive")))();
 
   // skill presence
   for (const name of Object.keys(HARNESSES)) {

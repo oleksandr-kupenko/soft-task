@@ -1,6 +1,6 @@
 {
   "name": "soft-task",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "Task-first AI build framework: brief \u2192 tickets \u2192 Softoria-HD executors \u2192 acceptance",
   "bin": {
     "soft-task": "./bin/soft-task.mjs"

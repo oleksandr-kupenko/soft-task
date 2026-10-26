@@ -66,6 +66,7 @@ Same shape: **one background bash per ticket**, not one bash that backgrounds th
 
 On notification (or when you discover `SOFTORIA_EXIT=`):
 
+0. Read `SOFTORIA_STATUS=` from the log tail. Not `ok` → follow the status table in `phases/5-subagents.md` (step 5). `gateway` or `vpn` on several tickets → one `wait-softoria.sh` waiter for all of them; its exit is your next wake-up.  
 1. Land that ticket (`phases/5-subagents.md` — diff, tests, commit, `st.py ticket NN done`).  
 2. Launch the next ready ticket if a slot is free.  
 3. Do not batch-wait for the whole wave if one ticket is already done — land early, keep the pipeline moving.
@@ -76,7 +77,7 @@ Symptoms: tickets marked `in-progress` on the dashboard, logs already contain `S
 
 1. **Do not relaunch** those tickets.  
 2. For each in-flight ticket, `tail -5 tmp/softoria/<slug>.log`:  
-   - has `SOFTORIA_EXIT=` → land it now (same as a notification).  
+   - has `SOFTORIA_EXIT=` → land it now (same as a notification). Status `gateway`/`vpn`, or an old log with `BadGatewayError` / `Error code: 502` and no status line → resume it by session (`phases/5-subagents.md` «Gateway down»); an old log has no `SOFTORIA_SESSION=`, so find the id with `opencode session list --format json` by the ticket title.  
    - no exit line but process still alive → adopt wait: `AwaitShell` on the PID if known, else one **tracked** Shell per ticket (`block_until_ms: 0`):
 
      ```bash

@@ -24,7 +24,7 @@ The ticket field `Модель` / `Model` is ignored when the executor is Softor
 
 ### Preflight once per run (build stage)
 
-1. Confirm the corporate VPN is on (Softoria API). Without it every run hangs or fails fast.
+1. `<skillRoot>/engines/softoria-hd/probe.sh` → `PROBE=ok`. `vpn` → ask the user to turn on the corporate VPN. `gateway` → Softoria itself is down; start the gateway waiter (see «Gateway down» below). `auth`/`nokey` → ask the user to check `SOFTORIA_API_KEY`.
 2. `opencode --version` works; `engines/softoria-hd/run.sh` exists under `skillDir`.
 3. `tmp/softoria/` is git-ignored. If not, add it to `.gitignore`.
 
@@ -49,13 +49,44 @@ The ticket field `Модель` / `Model` is ignored when the executor is Softor
 `skillRoot` is the soft-task install root (parent of `skill/` when installed as a package, or `skillDir` when the skill folder *is* the root). Prefer the path recorded in `config.json` / installer notes; fall back to `$SOFT_TASK_ROOT` or `<skillDir>/..`.
 
 3. **At most three in flight**, zones disjoint.
-4. Finished when the tracked shell exits **and** the log ends with `SOFTORIA_EXIT=<code>`. Land on the harness notification, not on a user nudge.
-5. Connection / timeout / 5xx / no output → stop and tell the user to enable VPN. Do not debug anything else first.
+4. Finished when the tracked shell exits **and** the log ends with `SOFTORIA_EXIT=<code>`. Land on the harness notification, not on a user nudge. Just above it, `run.sh` writes `SOFTORIA_STATUS=` and `SOFTORIA_SESSION=`.
+5. Act on `SOFTORIA_STATUS`:
+
+   | Status | Meaning | Action |
+   |---|---|---|
+   | `ok` | run finished | land the ticket |
+   | `gateway` | Softoria returned 5xx/429 after all in-process retries; VPN is fine | «Gateway down» below |
+   | `vpn` | no connection to Softoria | tell the user to turn on VPN; on «on» → resume as in «Gateway down» step 3 |
+   | `auth` | key rejected or missing | tell the user; do not retry |
+   | `error` | executor failed for another reason | read the log tail; `phases/5-repair.md` |
+
+   `run.sh` already retries gateway and network errors itself (`SOFTORIA_RETRIES`, default 3, backoff 30/90/180 s) and resumes the **same session**. Do not add your own retry loop.
 6. Orphaned wave (logs already have `SOFTORIA_EXIT=` or processes live with no tracked shell) → recovery in `phases/5-wait.md`; do not relaunch.
+
+### Gateway down
+
+The gateway sometimes returns 502 for minutes. This is not a VPN problem and not a ticket problem. Work done so far stays in the session and in the working tree.
+
+1. Keep the ticket `in-progress`. Do not relaunch it from scratch and do not change its prompt.
+2. Start **one** tracked waiter (Shell `block_until_ms: 0` / background bash), not one per ticket:
+
+   ```bash
+   <skillRoot>/engines/softoria-hd/wait-softoria.sh 30 60
+   ```
+
+   Tell the user in one line: «Softoria gateway down (502); N tickets paused, I resume them when it answers.» Then end the turn or `AwaitShell`. The waiter's exit wakes you.
+3. Waiter ends with `SOFTORIA_UP=ok` → for each paused ticket, one tracked Shell:
+
+   ```bash
+   <skillRoot>/engines/softoria-hd/run.sh - "<Title>" "$PWD" max <SOFTORIA_SESSION>
+   ```
+
+   `-` sends the built-in «continue after outage» message; the diff base stays the same. Empty `SOFTORIA_SESSION` → relaunch with the original prompt file.
+4. `SOFTORIA_UP=timeout` → tell the user Softoria is still down after 30 min; ask whether to wait again or stop. `SOFTORIA_UP=auth` → as status `auth`.
 
 ### Landing a Softoria ticket
 
-1. Read the return block from the end of the log. Missing → resume: `opencode run --auto --standalone --model softoria/Softoria-HD#max -s <sessionID> "<what is missing>"`.
+1. Read the return block from the end of the log. Missing → write the request to `tmp/softoria/<run>-NN.more.md` and resume in a new tracked Shell: `run.sh tmp/softoria/<run>-NN.more.md "<Title>" "$PWD" max <SOFTORIA_SESSION>`.
 2. `<skillRoot>/engines/softoria-hd/diff.sh <slug> "$PWD" --stat` — only zone paths? Outside → `phases/5-repair.md`.
 3. Re-run the ticket's scoped tests yourself. The report is not evidence.
 4. `BLOCKED` / `NEEDS_CONTEXT` → `phases/5-repair.md`. Relaunch with a fuller prompt, not another model.
