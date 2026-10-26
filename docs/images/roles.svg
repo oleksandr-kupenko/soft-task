@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="920" height="420" viewBox="0 0 920 420" role="img" aria-label="soft-task roles">
+  <defs>
+    <style>
+      .box { fill: #EBF4FF; stroke: #2B6CB0; stroke-width: 2; rx: 10; }
+      .box2 { fill: #F7FAFC; stroke: #1A365D; stroke-width: 2; rx: 10; }
+      .box3 { fill: #EDF2F7; stroke: #4A5568; stroke-width: 2; rx: 10; }
+      .t { font-family: ui-sans-serif, system-ui, sans-serif; fill: #1A365D; }
+      .h { font-size: 16px; font-weight: 700; }
+      .s { font-size: 12px; fill: #4A5568; }
+      .title { font-size: 20px; font-weight: 700; fill: #2B6CB0; }
+      .arrow { stroke: #2B6CB0; stroke-width: 2; fill: none; marker-end: url(#m); }
+    </style>
+    <marker id="m" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#2B6CB0"/>
+    </marker>
+  </defs>
+  <text x="32" y="36" class="t title">soft-task  roles</text>
+  <rect class="box" x="40" y="70" width="200" height="90"/>
+  <text x="56" y="108" class="t h">User</text>
+  <text x="56" y="132" class="t s">brief / ticket text</text>
+
+  <path class="arrow" d="M250 115 H310"/>
+  <rect class="box" x="310" y="60" width="260" height="110"/>
+  <text x="326" y="98" class="t h">Orchestrator</text>
+  <text x="326" y="122" class="t s">OpenCode · Cursor · Claude · Codex</text>
+  <text x="326" y="144" class="t s">dispatches, never writes app code</text>
+
+  <path class="arrow" d="M440 170 V210"/>
+  <rect class="box2" x="80" y="220" width="220" height="100"/>
+  <text x="96" y="258" class="t h">Executor</text>
+  <text x="96" y="282" class="t s">Softoria-HD via opencode run</text>
+  <text x="96" y="304" class="t s">one ticket · fresh context</text>
+
+  <rect class="box2" x="350" y="220" width="220" height="100"/>
+  <text x="366" y="258" class="t h">Reviewer</text>
+  <text x="366" y="282" class="t s">Softoria-HD (default)</text>
+  <text x="366" y="304" class="t s">or harness subagent</text>
+
+  <rect class="box3" x="620" y="220" width="240" height="100"/>
+  <text x="636" y="258" class="t h">Vision</text>
+  <text x="636" y="282" class="t s">Softoria-SD · see.sh</text>
+  <text x="636" y="304" class="t s">specs &amp; screenshot QA</text>
+
+  <path class="arrow" d="M190 170 V210"/>
+  <path class="arrow" d="M570 170 V210"/>
+  <path class="arrow" d="M540 115 H620 V210"/>
+
+  <text x="32" y="380" class="t s">Repo working tree is shared; only the executor writes application code.</text>
+</svg>

@@ -1,0 +1,20 @@
+{
+  "harness": "auto",
+  "language": "auto",
+  "profile": "normal",
+  "engines": {
+    "executor": "softoria-hd",
+    "reviewer": "softoria-hd",
+    "vision": "softoria-sd"
+  },
+  "softoria": {
+    "model": "softoria/Softoria-HD#max",
+    "visionAgent": "vision",
+    "vpnRequired": true,
+    "maxInFlight": 3
+  },
+  "check": {
+    "command": null,
+    "stack": null
+  }
+}

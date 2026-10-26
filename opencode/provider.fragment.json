@@ -1,0 +1,58 @@
+{
+  "provider": {
+    "softoria": {
+      "npm": "@ai-sdk/openai-compatible",
+      "options": {
+        "baseURL": "https://llh.dataforseo.com:445/v1",
+        "apiKey": "{env:SOFTORIA_API_KEY}",
+        "includeUsage": true
+      },
+      "models": {
+        "Softoria-HD": {
+          "id": "Softoria-HD",
+          "name": "Softoria-HD",
+          "tool_call": true,
+          "modalities": { "input": ["text"], "output": ["text"] },
+          "options": {
+            "temperature": 1,
+            "top_p": 0.95,
+            "top_k": 40,
+            "chat_template_kwargs": { "reasoning_effort": "max" }
+          },
+          "limit": { "context": 524000, "output": 40000 },
+          "variants": {
+            "max": { "chat_template_kwargs": { "reasoning_effort": "max" } },
+            "high": { "chat_template_kwargs": { "reasoning_effort": "high" } },
+            "low": { "chat_template_kwargs": { "reasoning_effort": "low" } }
+          }
+        },
+        "Softoria-SD": {
+          "id": "Softoria-SD",
+          "tool_call": true,
+          "modalities": { "input": ["text", "image", "audio", "video"], "output": ["text"] },
+          "options": {
+            "temperature": 1,
+            "top_p": 0.95,
+            "top_k": 40
+          },
+          "limit": { "context": 240000, "output": 32768 }
+        }
+      }
+    }
+  },
+  "agent": {
+    "vision": {
+      "model": "softoria/Softoria-SD",
+      "mode": "primary",
+      "steps": 1,
+      "tools": { "*": false },
+      "permission": {
+        "skill": "deny",
+        "task": "deny",
+        "bash": "deny",
+        "webfetch": "deny",
+        "websearch": "deny"
+      }
+    }
+  }
+}

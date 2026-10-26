@@ -1,0 +1,35 @@
+{
+  "name": "soft-task",
+  "version": "0.1.1",
+  "description": "Task-first AI build framework: brief \u2192 tickets \u2192 Softoria-HD executors \u2192 acceptance",
+  "bin": {
+    "soft-task": "./bin/soft-task.mjs"
+  },
+  "type": "module",
+  "engines": {
+    "node": ">=18"
+  },
+  "files": [
+    "bin",
+    "skill",
+    "engines",
+    "opencode",
+    "docs",
+    "LICENSE",
+    "NOTICE",
+    "README.md"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/PLACEHOLDER/soft-task.git"
+  },
+  "keywords": [
+    "ai",
+    "agent",
+    "skill",
+    "opencode",
+    "cursor",
+    "claude-code"
+  ]
+}

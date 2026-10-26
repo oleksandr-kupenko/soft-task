@@ -1,0 +1,11 @@
+soft-task
+==========
+
+This project is derived from Autopilot
+(https://github.com/nick-vels/skills — skill "autopilot"),
+Copyright (c) 2026 Nick Vels, licensed under the MIT License.
+
+Substantial portions of the phase files, dashboard template, and
+run-state tool originate from that work. Modifications rename the
+product, remove the upstream update check, retarget the default
+executor/reviewer/vision engines, and add a harness-agnostic installer.
