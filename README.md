@@ -31,7 +31,7 @@ flowchart LR
 
 ```bash
 # from a clone (no npm publish required)
-git clone <your-fork-url> soft-task
+git clone https://github.com/oleksandr-kupenko/soft-task.git soft-task
 cd soft-task
 node bin/soft-task.mjs install --harness all --yes
 
@@ -44,7 +44,7 @@ node bin/soft-task.mjs doctor
 Later, from any machine:
 
 ```bash
-npx github:<you>/soft-task install --harness all --yes
+npx github:oleksandr-kupenko/soft-task install --harness all --yes
 ```
 
 `--yes` merges the Softoria provider + vision agent into `~/.config/opencode/opencode.json` with `apiKey: "{env:SOFTORIA_API_KEY}"`. Existing keys are never read or copied.
