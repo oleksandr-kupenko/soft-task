@@ -5,7 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>soft-task — документація</title>
   <meta name="description" content="soft-task — фреймворк для AI-розробки. Він ділить велику задачу на тікети. Кожен тікет виконує окремий агент-виконавець (за замовчуванням — Softoria-HD)." />
-  <link rel="icon" type="image/png" href="images/logo-mark.png" />
+  <link rel="icon" type="image/png" href="images/favicon.png?v=2" />
+  <link rel="icon" href="favicon.ico?v=2" sizes="any" />
   <style>
     :root {
       --fg: #202122;
@@ -385,6 +386,42 @@ npx github:oleksandr-kupenko/soft-task doctor</code></pre>
       <code>harness</code> — новий субагент вашого середовища: у Cursor — Task, у Claude Code — Agent, у Codex — ізольований агент.
       Оркестратор сам ці ролі не виконує. В OpenCode субагентів немає, тому там усі ролі працюють на Softoria-HD. Ролі описані в розділі <a href="#roles">Ролі</a>.
     </p>
+    <h3 id="harness-key">Параметр <code>harness</code> нагорі файлу</h3>
+    <p>
+      Це не те саме, що значення <code>harness</code> в <code>engines</code>. Верхній параметр
+      <code>"harness": "auto"</code> каже, у якому середовищі працює soft-task: <code>cursor</code>,
+      <code>claude-code</code>, <code>opencode</code> або <code>codex</code>. Від нього залежить, який
+      адаптер читає оркестратор. <code>auto</code> означає «визнач сам».
+    </p>
+
+    <h3 id="reasoning">Модель і рівень міркування</h3>
+    <p>
+      За замовчуванням усі ролі на Softoria-HD працюють із максимальним рівнем міркування.
+      У <code>config.json</code> це <code>softoria.model: "softoria/Softoria-HD#max"</code>.
+      Скрипт <code>run.sh</code> приймає четвертий аргумент <code>variant</code>: <code>low</code>,
+      <code>high</code> або <code>max</code>. Якщо його не вказати, буде <code>max</code>.
+      Виконавці запускаються без цього аргументу, тож завжди на <code>max</code>.
+    </p>
+
+    <h3 id="agent">Агент у тікеті</h3>
+    <p>
+      Дашборд показує біля кожного тікета, хто його виконує. Ім’я записується у файл тікета ще під час
+      плану, бо сам дашборд статичний:
+    </p>
+    <pre><code>**Агент:** Softoria-HD (max)</code></pre>
+    <p>
+      Якщо виконавець — <code>harness</code>, у рядок записується конкретна модель, наприклад
+      <code>Claude Sonnet 4.5</code>. Якщо рядка немає, <code>st.py</code> бере значення з
+      <code>config.json</code>. Якщо в момент запуску виконавець інший (резервний варіант, модель недоступна),
+      оркестратор це виправляє:
+    </p>
+    <pre><code>python3 .soft-task/st.py ticket 02 start --agent "Claude Sonnet 4.5"
+python3 .soft-task/st.py ticket 02 review --agent "Softoria-HD (max)"</code></pre>
+    <p>
+      Другий рядок задає рев’юера. Без <code>--agent</code> береться <code>engines.reviewer</code>.
+      Поки тікет на рев’ю, на дашборді видно рев’юера, в інших станах — того, хто пише код.
+    </p>
+
     <p>Файл можна не редагувати. Скажіть оркестратору на старті, наприклад: «рев’ю і приймання роби субагентом Cursor».</p>
 
     <h2 id="faq">Часті питання</h2>

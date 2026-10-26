@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+- Dashboard restyled (Netlify-like palette, flat cards, soft hero block); Russian UI language removed, Ukrainian fully translated, EN and UK remain.
+- Per-ticket agent: ticket header `**Агент:**` / `**Agent:**`, filled from `config.json` when missing; `st.py ticket NN start|review --agent "…"` overrides it. Shown on the dashboard bars and in the hero line.
+- Transparent logo mark, text wordmark in the dashboard header, new favicon, dashboard screenshot on the site and in the README.
+
 ## 0.1.4
 
 - **Softoria gateway outages (502).** `run.sh` now retries gateway/network errors in-process (`SOFTORIA_RETRIES`, default 3; `SOFTORIA_BACKOFF`, default `30 90 180`) and resumes the **same opencode session**. The log ends with `SOFTORIA_STATUS=ok|gateway|vpn|auth|error`, `SOFTORIA_RETRIES`, `SOFTORIA_SESSION`; `SOFTORIA_EXIT` stays the last line.
